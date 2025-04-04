@@ -33,3 +33,5 @@ jobs:
 
       - name: Run Composer Security Audit
         run: composer audit
+      - name: Run ImportMap Security Audit
+        run: bin/console importmap:audit

@@ -23,8 +23,7 @@ class SecurityController extends AbstractController
             $this->addFlash('error', $translator->trans($error->getMessageKey(), $error->getMessageData(), 'security'));
         }
 
-        return $this->render(
-            'security/login.html.twig', [
+        return $this->render('security/login.html.twig', [
                 'last_username' => $lastUsername,
         ]);
     }

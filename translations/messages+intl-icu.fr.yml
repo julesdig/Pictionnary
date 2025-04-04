@@ -1,106 +1,15 @@
-dashboard:
-  title: "MeshGuard --Senior--"
-  nav:
-    disconnect: "Déconnexion"
-    alert: "Alertes"
-    user: "Utilisateur"
-    device: 'Dispositif'
-  footer: "MeshGuard | Jules Digonnet"
-  home:
-    title: "Tableau de bord"
-    device:
-      information: "Informations sur le dispositif"
-      details: "Détails du dispositif"
-      id: "ID du dispositif : {id}"
-      imei: "IMEI du dispositif : {imei}"
-      technologies: "Technologie utilisée : {technologies}"
-      type: "Type de carte : {type}"
-      token: "Token : {token}"
-      date: "Crée le : {date} "
-      not_device: "Aucun device n'est associé à votre compte"
-    alert:
-        title: "Mes alertes"
-        no_alert: "Aucune alerte n'est associée à votre compte"
-        id: "ID de l'alerte : "
-        date: "Date de l'alerte : "
-  admin:
-    alert:
-      list:
-        title: "Liste des alertes"
-        datatable:
-          alert:
-            id: "ID de l'alerte"
-            date: "Date de l'alerte"
-          device:
-            id: "ID du dispositif"
-            imei: "IMEI du dispositif"
-            type: "Type du device"
-            technology: "Technologie du device"
-          user:
-            id: "ID de l'utilisateur"
-            user_fullname: "Nom complet de l'utilisateur"
-        no_alert: "Aucune alerte disponible"
-    user:
-      list:
-        title: "Liste des utilisateurs"
-        create: "Créer un utilisateur"
-        datatable:
-          user:
-            id: "ID de l'utilisateur"
-            fullname: "Nom complet de l'utilisateur"
-            email: "Email de l'utilisateur"
-          device:
-            id: "ID du dispositif"
-            imei: "IMEI du dispositif"
-            type: "Type du device"
-            technology: "Technologie du device"
-          alert:
-            count: "Nombre d'alertes"
-          action: "Action"
-        no_user: "Aucun utilisateur disponible"
-      create:
-        title: "Créer un utilisateur"
-        success: "L'utilisateur a bien été créé"
-      delete:
-        success: "L'utilisateur a bien été supprimé"
-        error: "Une erreur est survenue lors de la suppression de l'utilisateur"
-      edit:
-        title: "Modifier un utilisateur"
-    device:
-      create:
-        success: "Le dispositif a bien été créé"
-        title: 'Créer un dispositif'
-      delete:
-        success: "Le dispositif a bien été supprimé"
-        error: "Une erreur est survenue lors de la suppression du dispositif"
-      edit:
-        success: "Le dispositif a bien été modifié"
-        title: 'Modifier un dispositif'
-      list:
-        title: 'Liste des dispositifs'
-        create: 'Créer un dispositif'
-        no_device: 'Aucun dispositif disponible'
-        datatable:
-          device:
-            id: 'ID du dispositif'
-            imei: 'IMEI du dispositif'
-            type: 'Type du device'
-            technology: 'Technologie du device'
-          user:
-            fullname: "Nom complet de l'utilisateur"
-            email: "Email de l'utilisateur"
-          alert:
-            count: "Nombre d'alertes"
-          action: "Action"
-
+app:
+  name: "Pictionary"
+generic:
+  error:
+  user_not_found: "Utilisateur non trouvé"
 security:
   title: "Connexion"
-  message: "Bienvenue chez MeshGuard"
+  message: "Bienvenue chez {app_name}"
   login:
     email: "Adresse email"
     username: "Nom d'utilisateur"
     password: "Mot de passe"
-    remember_me: "Se souvenir de moi"
     submit: "Se connecter"
   logout:
     title: "Déconnexion"
@@ -119,14 +28,4 @@ form:
       email: "Email"
       password: "Mot de passe"
       device: "Dispositif"
-      save: "Enregistrer"
-  device:
-    create:
-      title: "Créer un dispositif"
-    update:
-      title: "Modifier un dispositif"
-    properties:
-      imei: "IMEI"
-      type: "Type"
-      technology: "Technologie"
       save: "Enregistrer"

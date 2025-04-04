@@ -5,12 +5,12 @@
 {% set body_class = 'theme-whbl' %}
 {% set body_id = 'login-page-full' %}
 {% block body %}
+    <i class="bi bi-0-circle-fill"></i> jules
     <div class=" d-flex justify-content-center align-items-center vh-100">
         <div class="col-sm-4 border-lightBlue p-5 ">
             <div class="container">
                 <div class="text-center mb-auto">
-                    <img width="100" src="{{ asset('img/MeshGuardLogo.png') }}" alt="logo" class="img-fluid">
-                    <p class="pa2"> {{ 'security.message'|trans }}</p>
+                    <p class="pa2"> {{ 'security.message'|trans({'app_name': 'app.name'|trans}) }}</p>
                 </div>
                 <form role="form" method="post">
                     <div class="form-floating mb-1">
@@ -26,10 +26,6 @@
                                required
                         />
                         <label for="floatingInput">{{ 'security.login.password'|trans }}</label>
-                    </div>
-                    <div class="checkbox mb-3">
-                        <input type="checkbox" id="remember_me" name="remember_me"/>
-                        <label for="remember_me">{{ 'security.login.remember_me'|trans }}</label>
                     </div>
                     <button type="submit" class="btn button-lightBlue col-sm-12" name="submit">
                         {{ 'security.login.submit'|trans }}
