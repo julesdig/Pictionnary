@@ -1,0 +1,49 @@
+name: Coding Standard
+
+on:
+  workflow_call:
+
+jobs:
+  coding-standard:
+    name: Coding Standard (PSR-12)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v4
+      - name: Configure Git safe directory
+        run: git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+      - name: Copy env file
+        run: cp .env.test .env
+      - name: Git Files Changed
+        id: changes
+        run: |
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/develop:refs/remotes/origin/develop
+          echo changedFiles=$(git diff --diff-filter=ACMRT --name-only origin/develop HEAD | xargs) >> $GITHUB_OUTPUT
+      - name: Setup PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: 8.2
+          ini-values: memory_limit=-1
+          extensions: imagick, bcmath, mysqli, intl, pdo_mysql, pdo_pgsql, pgsql, opcache, gd, xsl, zip, soap, pcntl, sockets
+        env:
+          APP_ENV: dev
+      - name: Composer install
+        uses: ramsey/composer-install@v3
+        with:
+          composer-options: --profile --ignore-platform-reqs
+      - name: PHP Mess Detector
+        run: |
+          for file in ${{ steps.changes.outputs.changedFiles }} 
+          do 
+            php bin/phpmd ${file} text phpmd.xml 
+          done
+      - name: PHP Code Sniffer
+        run: |
+          if [[ ! -z "${{ steps.changes.outputs.changedFiles }}" ]]
+            then php bin/phpcs --standard=phpcs.xml ${{ steps.changes.outputs.changedFiles }}
+          fi
+      - name: PHPStan Static Analysis
+        run: |
+          if [[ ! -z "${{ steps.changes.outputs.changedFiles }}" ]]
+            then php bin/phpstan analyse ${{ steps.changes.outputs.changedFiles }}
+          fi

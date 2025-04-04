@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ "security.title"|trans() }}{% endblock %}
+
+{% set body_class = 'theme-whbl' %}
+{% set body_id = 'login-page-full' %}
+{% block body %}
+    <div class=" d-flex justify-content-center align-items-center vh-100">
+        <div class="col-sm-4 border-lightBlue p-5 ">
+            <div class="container">
+                <div class="text-center mb-auto">
+                    <img width="100" src="{{ asset('img/MeshGuardLogo.png') }}" alt="logo" class="img-fluid">
+                    <p class="pa2"> {{ 'security.message'|trans }}</p>
+                </div>
+                <form role="form" method="post">
+                    <div class="form-floating mb-1">
+                        <input type="email" class="form-control" id="inputEmail" name="email"
+                                                               value="{{ last_username }}" autocomplete="email"
+                                                               placeholder="{{ 'security.login.email'|trans }}" required autofocus
+                        />
+                        <label for="floatingInput">{{ 'security.login.email'|trans }}</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="inputPassword" name="password"
+                               autocomplete="current-password" placeholder="{{ 'security.login.password'|trans }}"
+                               required
+                        />
+                        <label for="floatingInput">{{ 'security.login.password'|trans }}</label>
+                    </div>
+                    <div class="checkbox mb-3">
+                        <input type="checkbox" id="remember_me" name="remember_me"/>
+                        <label for="remember_me">{{ 'security.login.remember_me'|trans }}</label>
+                    </div>
+                    <button type="submit" class="btn button-lightBlue col-sm-12" name="submit">
+                        {{ 'security.login.submit'|trans }}
+                    </button>
+                    <input type="hidden" name="_token" value="{{ csrf_token('authenticate') }}">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

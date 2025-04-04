@@ -1,0 +1,27 @@
+name: main
+
+on:
+  pull_request:
+    branches:
+      - develop
+  push:
+    branches:
+      - develop
+      - main
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  security:
+    uses: ./.github/workflows/security.yml
+    secrets: inherit
+
+  coding-standard:
+    uses: ./.github/workflows/coding-standards.yml
+    secrets: inherit
+    needs: security
+
+  test:
+    uses: ./.github/workflows/test.yml
+    secrets: inherit
+    needs: security
