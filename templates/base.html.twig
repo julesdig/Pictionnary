@@ -18,6 +18,13 @@
 {% block body %}
     <div id="theme-wrapper">
         <nav class="navbar navbar-expand-lg nav-background">
+            <ul class="navbar-nav">
+                <li class="nav-item ms-auto ">
+                    <a class="nav-link link-darkBlue rounded " href="{{ path('app_logout') }}"
+                       tabindex="-1">{{ 'dashboard.nav.disconnect'|trans }}</a>
+                </li>
+            </ul>
+
         </nav>
         <div id="content-wrapper">
             <div class="row">

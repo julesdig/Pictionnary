@@ -4,6 +4,7 @@ generic:
   error:
   user_not_found: "Utilisateur non trouvé"
 security:
+  register: "S'inscrire"
   title: "Connexion"
   message: "Bienvenue chez {app_name}"
   login:
@@ -14,18 +15,6 @@ security:
   logout:
     title: "Déconnexion"
     submit: "Se déconnecter"
-form:
-  user:
-    create:
-      title: "Créer un utilisateur"
-    update:
-      title: "Modifier un utilisateur"
-    delete:
-      title: "Supprimer un utilisateur"
-    properties:
-      firstname: "Prénom"
-      lastname: "Nom"
-      email: "Email"
-      password: "Mot de passe"
-      device: "Dispositif"
-      save: "Enregistrer"
+dashboard:
+  nav:
+    disconnect: "Déconnexion"

@@ -9,13 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     container: node:latest
     services:
-      mysql:
+      database:
         image: mysql:latest
         env:
-          MYSQL_ROOT_PASSWORD: pictionary
+          MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: pictionary
-          MYSQL_USER: pictionary
-          MYSQL_PASSWORD: pictionary
           ports: 3306:3306
     steps:
       - name: Git Checkout
