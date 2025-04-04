@@ -36,3 +36,21 @@ init-project: ## Initialize project (Docker + DB setup + Composer install)
 	$(MAKE) create-db
 	$(MAKE) update-db
 	@echo "✅ Project initialized successfully!"
+
+phpcs: ## play phpcs
+	docker exec -it pictionary_php php bin/phpcs
+
+phpcbf: ## play phpcbf
+	docker exec -it pictionary_php php bin/phpcbf
+
+phpmd: ## play phpcs
+	docker exec -it pictionary_php php bin/phpmd  src/ text phpmd.xml
+
+phpstan: ## play phpcs
+	docker exec -it pictionary_php php bin/phpstan analyse src
+
+coding-standards: ## Check coding standards
+	$(MAKE) phpcbf
+	$(MAKE) phpcs
+	$(MAKE) phpmd
+	$(MAKE) phpstan

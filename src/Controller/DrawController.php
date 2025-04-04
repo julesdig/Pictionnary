@@ -13,7 +13,7 @@ class DrawController extends AbstractController
     #[Route('test', name: 'test')]
     public function index(): Response
     {
-        $filePath = $this->getParameter('kernel.project_dir') . '/drawings.ndjson';
+        $filePath = $this->getParameter('kernel.project_dir').'/drawings.ndjson';
 
         // Vérifier si le fichier existe
         if (!file_exists($filePath)) {
@@ -26,6 +26,4 @@ class DrawController extends AbstractController
 
         return $this->json($drawings);
     }
-
-
 }

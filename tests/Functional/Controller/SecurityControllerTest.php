@@ -25,7 +25,7 @@ class SecurityControllerTest extends WebTestCase
         static::ensureKernelShutdown();
     }
     #[DataProvider('loginProvider')]
-    public function testLogin(string $email, string $password , string $expectedResult): void
+    public function testLogin(string $email, string $password, string $expectedResult): void
     {
         $url = $this->router->generate('app_login');
         $this->client->request(Request::METHOD_GET, $url);
@@ -39,7 +39,6 @@ class SecurityControllerTest extends WebTestCase
         $this->client->followRedirect();
         $this->assertRouteSame($expectedResult);
         $this->assertResponseStatusCodeSame(200);
-
     }
 
     public static function loginProvider(): Generator

@@ -15,5 +15,4 @@ class DataAwsS3Uploader extends AbstractAwsS3Uploader
             $_ENV['AWS_BUCKET_NAME']
         );
     }
-
 }

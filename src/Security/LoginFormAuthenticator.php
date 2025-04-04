@@ -10,8 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusException;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
@@ -19,7 +19,6 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 {
@@ -32,14 +31,13 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         private readonly RequestStack $requestStack,
         private readonly Security $security,
         private readonly UserRepository $userRepository,
-        private readonly TranslatorInterface $translator,
+        private readonly RouterInterface $router,
     ) {
     }
 
     public function authenticate(Request $request): Passport
     {
         $email = $request->request->get('email', '');
-        $user = $this->userRepository->findOneBy(['email' => $email]);
         $this->requestStack->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
         return new Passport(
             new UserBadge($email),
@@ -62,8 +60,8 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
                 ? 'admin_dashboard.index'
                 : 'dashboard.index',
             [],
-            UrlGeneratorInterface::ABSOLUTE_URL)
-        );
+            UrlGeneratorInterface::ABSOLUTE_URL
+        ));
     }
 
     protected function getLoginUrl(Request $request): string
