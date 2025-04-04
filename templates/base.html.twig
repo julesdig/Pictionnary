@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>{{ 'app.name'|trans() }} | {% block title %}{% endblock %}</title>
     <link rel="icon" href="{{ asset('img/logo.png') }}">
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('styles/app.scss') }}">
+    {% endblock %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     {% block importmap %}{{ importmap('app') }}{% endblock %}
 </head>
 <body class="{{ body_class|default('') }}" id="{{ body_id|default('') }}" data-locale="{{ app.locale }}">

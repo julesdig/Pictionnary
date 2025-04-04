@@ -1,5 +1,14 @@
 /*** Icons ***/
+@font-face {
+  font-family: 'Bootstrap Icons';
+  src: url('/fonts/bootstrap-icons.woff2') format('woff2'),
+  url('/fonts/bootstrap-icons.woff') format('woff');
+}
+
+
+/*** Icons ***/
 @import '../../node_modules/bootstrap-icons/font/bootstrap-icons';
 
 /*** Bootstrap ***/
 @import '../../node_modules/bootstrap/scss/bootstrap';
+
