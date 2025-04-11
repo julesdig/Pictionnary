@@ -1,5 +1,5 @@
 app:
-  name: "Pictionary"
+  name: "ArtScore"
 generic:
   error:
   user_not_found: "Utilisateur non trouvé"
@@ -18,3 +18,24 @@ security:
 dashboard:
   nav:
     disconnect: "Déconnexion"
+placeholder: "Entrez"
+button:
+  submit: "Soumettre"
+  cancel: "Annuler"
+  delete: "Supprimer"
+  edit: "Modifier"
+  save: "Enregistrer"
+  back: "Retour"
+  add: "Ajouter"
+  search: "Rechercher"
+  clear: "Effacer"
+  close: "Fermer"
+  send: "Envoyer"
+  next: "Suivant"
+  previous: "Précédent"
+User:
+  firstName: "Prénom"
+  lastName: "Nom"
+  email: "Email"
+  password: "Mot de passe"
+  repeatPassword: "Répéter le mot de passe"

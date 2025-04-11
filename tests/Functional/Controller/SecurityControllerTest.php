@@ -29,7 +29,6 @@ class SecurityControllerTest extends WebTestCase
     {
         $url = $this->router->generate('app_login');
         $this->client->request(Request::METHOD_GET, $url);
-
         $this->assertResponseStatusCodeSame(200);
         $this->assertSelectorExists('a[href="'.$this->router->generate('app_register').'"]');
         $this->client->submitForm('Se connecter', [

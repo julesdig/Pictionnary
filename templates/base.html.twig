@@ -9,6 +9,7 @@
     {% endblock %}
     {% block importmap %}{{ importmap('app') }}{% endblock %}
 </head>
+
 <body class="{{ body_class|default('') }}" id="{{ body_id|default('') }}" data-locale="{{ app.locale }}">
 {% include('partials/_toast.html.twig') %}
 {% set errors = app.flashes('error') %}
