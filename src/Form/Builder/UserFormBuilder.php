@@ -2,7 +2,6 @@
 
 namespace App\Form\Builder;
 
-
 use App\Entity\User;
 use App\Form\Type\AbstractDynamicFormType;
 use App\Form\Type\UserFormType;
@@ -22,7 +21,10 @@ class UserFormBuilder
 
     public function getForm(User $user): FormInterface
     {
-        return $this->formFactory->createNamed('', UserFormType::class, $user,
+        return $this->formFactory->createNamed(
+            '',
+            UserFormType::class,
+            $user,
             [
                 'method' => Request::METHOD_POST,
                 'fields'=> [],

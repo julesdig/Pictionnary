@@ -3,11 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\Builder\SecurityFormBuilder;
 use App\Form\Builder\UserFormBuilder;
 use App\Form\Handler\UserFormHandler;
+use Doctrine\ORM\Exception\ORMException;
 use Exception;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,13 +16,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SecurityController extends AbstractController
 {
-    #[Route('/login', name: 'app_login')]
+    #[Route('/login', name: 'app_login', methods: ['GET', 'POST'])]
     public function login(AuthenticationUtils $authenticationUtils, TranslatorInterface $translator): Response
     {
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
         if ($error) {
+            dump($error);
             $this->addFlash('error', $translator->trans($error->getMessageKey(), $error->getMessageData(), 'security'));
         }
 
@@ -32,17 +32,19 @@ class SecurityController extends AbstractController
         ]);
     }
 
-    #[Route('/register', name: 'app_register')]
+    /**
+     * @throws ORMException
+     */
+    #[Route('/register', name: 'app_register', methods: ['GET', 'POST'])]
     public function register(
         Request $request,
         UserFormBuilder $userFormBuilder,
         UserFormHandler $userFormHandler,
-
     ): Response {
 
         $form = $userFormBuilder->getForm(new User());
-        $result = $userFormHandler->handle( $request,$form);
-        if($result){
+        $result = $userFormHandler->handle($request, $form);
+        if ($result) {
             $this->addFlash('success', 'User registered successfully');
             return $this->redirectToRoute('app_login');
         }

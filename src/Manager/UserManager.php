@@ -4,21 +4,23 @@ namespace App\Manager;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\ORMException;
 
-class UserManager
+readonly class UserManager
 {
     public function __construct(
         private EntityManagerInterface $manager,
     ) {
     }
 
-    public function create(string $firstName, string $lastName, string $location, int $age): User
+    /**
+     * @throws ORMException
+     */
+    public function save(User $user): User
     {
-        $user = new User();
-        $user->setFirstName($firstName);
-        $user->setLastName($lastName);
         $this->manager->persist($user);
         $this->manager->flush();
+        $this->manager->refresh($user);
         return $user;
     }
 }

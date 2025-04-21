@@ -36,8 +36,9 @@ services:
         PHP_VERSION_SET: ${PHP_VERSION_SET:-8.4}
         WORKDIR_SERVER: /var/www/${NAMESPACE}
         XDEBUG_ENABLE: 1
-        PHP_IDE_CONFIG: "serverName=localhost"
     container_name: ${NAMESPACE}_php
+    environment:
+      PHP_IDE_CONFIG: "serverName=localhost"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     working_dir: /var/www/${NAMESPACE}

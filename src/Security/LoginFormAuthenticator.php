@@ -2,7 +2,6 @@
 
 namespace App\Security;
 
-use App\Model\Constant\SecurityConstant;
 use App\Repository\UserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -43,7 +42,6 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             new UserBadge($email),
             new PasswordCredentials($request->request->get('password', '')),
             [
-                new CsrfTokenBadge('authenticate', $request->get('_token')),
             ]
         );
     }
@@ -72,7 +70,6 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     private function forceRedirect(string $targetPath, string $locale): bool
     {
         $protectedRoutes = [
-            'lostInSpace',
             'app_login',
         ];
 

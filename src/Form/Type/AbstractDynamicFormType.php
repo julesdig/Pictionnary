@@ -19,8 +19,10 @@ class AbstractDynamicFormType extends AbstractType
 {
 
 
-    public function __construct(private readonly FieldTypeGuesser $fieldTypeGuesser, private readonly TranslatorInterface $translator )
-    {
+    public function __construct(
+        private readonly FieldTypeGuesser $fieldTypeGuesser,
+        private readonly TranslatorInterface $translator
+    ) {
     }
 
     /**
@@ -41,7 +43,6 @@ class AbstractDynamicFormType extends AbstractType
         if (empty($fields)) {
             $refClass = new ReflectionClass(static::getEntityClass());
             $fields = array_map(fn($prop) => $prop->getName(), $refClass->getProperties());
-
         }
 
         $ignoreFields = array_merge($options['ignore_fields'], ['id']);
@@ -62,17 +63,23 @@ class AbstractDynamicFormType extends AbstractType
                     ],
                     'second_options' => [
                         'label' => $this->generateLabel('repeatPassword'),
-                        'attr' => ['placeholder' => $this->generatePlaceholder('repeatPassword'), 'class' => 'form-control']
+                        'attr' => [
+                            'placeholder' => $this->generatePlaceholder('repeatPassword'),
+                            'class' => 'form-control',
+                        ],
                     ],
                 ]),
-                default => $builder->add($field, $this->fieldTypeGuesser->guessFormType(static::getEntityClass(), $field), [
-                    'label' => $this->generateLabel($field),
+                default => $builder->add(
+                    $field,
+                    $this->fieldTypeGuesser->guessFormType(static::getEntityClass(), $field),
+                    [
+                        'label' => $this->generateLabel($field),
                     'attr' => [
                         'placeholder' => $this->generatePlaceholder($field),
                         'class' => 'form-control',
+                        ],
                     ]
-                ]),
-
+                ),
             };
             $builder->add('save', SubmitType::class, [
                 'label' => $this->translator->trans('button.submit'),
@@ -80,9 +87,14 @@ class AbstractDynamicFormType extends AbstractType
             ]);
         }
     }
+
+    /**
+     * @throws ReflectionException
+     */
     protected function generatePlaceholder(string $property): string
     {
-        return $this->translator->trans('placeholder') . ' ' . $this->translator->trans($this->generateLabel($property));
+        return $this->translator->trans('placeholder')
+            .' '.$this->translator->trans($this->generateLabel($property));
     }
     public function configureOptions(OptionsResolver $resolver): void
     {

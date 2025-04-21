@@ -20,7 +20,7 @@ security:
             form_login:
                 login_path: app_login
                 check_path: app_login
-                enable_csrf: true
+                enable_csrf: false
                 csrf_parameter: _token
             custom_authenticators:
                 - App\Security\LoginFormAuthenticator
@@ -35,7 +35,7 @@ security:
                     - cookies
                     - storage
             login_throttling:
-                max_attempts: 3
+                max_attempts: 150
                 interval: '15 minutes'
 
             # activate different ways to authenticate

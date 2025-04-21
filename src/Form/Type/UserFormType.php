@@ -6,7 +6,7 @@ use App\Entity\User;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UserFormType  extends AbstractDynamicFormType
+class UserFormType extends AbstractDynamicFormType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -25,5 +25,4 @@ class UserFormType  extends AbstractDynamicFormType
             'ignore_fields' => [],
         ]);
     }
-
 }

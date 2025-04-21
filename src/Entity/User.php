@@ -40,7 +40,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Length(min: 12, max: 255, minMessage: 'user.password.min')]
     #[Assert\PasswordStrength(minScore: PasswordStrength::STRENGTH_VERY_STRONG)]
     #[Assert\NotCompromisedPassword]
-    #[Assert\Regex(pattern: '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.* )(?=.*[^a-zA-Z0-9]).{12,}$/', message: 'user.password.regex')]
+    #[Assert\Regex(
+        pattern: '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.* )(?=.*[^a-zA-Z0-9]).{12,}$/',
+        message: 'user.password.regex'
+    )]
     #[ORM\Column(type: 'string', length: 255, nullable: false)]
     private string $password;
 
