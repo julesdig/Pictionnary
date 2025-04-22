@@ -28,7 +28,7 @@ jobs:
           php-version: 8.4
           coverage: xdebug
           ini-values: memory_limit=-1
-          extensions: imagick, bcmath, mysqli, intl, pdo_mysql, pdo_pgsql, pgsql, opcache, gd, xsl, zip, soap, pcntl, sockets, gettext, xdebug
+          extensions: imagick, bcmath,mysql-client, mysqli, intl, pdo_mysql, pdo_pgsql, pgsql, opcache, gd, xsl, zip, soap, pcntl, sockets, gettext, xdebug
       - name: Composer install
         uses: ramsey/composer-install@v3
         with:
