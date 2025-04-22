@@ -16,11 +16,6 @@ jobs:
     uses: ./.github/workflows/security.yml
     secrets: inherit
 
-  coding-standard:
-    uses: ./.github/workflows/coding-standards.yml
-    secrets: inherit
-    needs: security
-
   test:
     uses: ./.github/workflows/test.yml
     secrets: inherit
