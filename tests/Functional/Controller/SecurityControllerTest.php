@@ -55,4 +55,11 @@ class SecurityControllerTest extends WebTestCase
             'expectedResult' => 'dashboard.index'
         ];
     }
+
+    public function testRegister(): void
+    {
+        $url = $this->router->generate('app_register');
+        $this->client->request(Request::METHOD_GET, $url);
+        $this->assertResponseStatusCodeSame(200);
+    }
 }
