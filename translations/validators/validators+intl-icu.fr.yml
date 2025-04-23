@@ -1,0 +1,15 @@
+user:
+  password:
+    regex: "Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial"
+    min: "Le mot de passe doit contenir au moins 12 caractères"
+  email:
+    unique: "L'email n'est pas valide"
+    type: "L'email n'est pas valide"
+    not_blank: "L'email ne peut pas être vide"
+  firstname:
+    not_blank: "Le prénom ne peut pas être vide"
+    min: "Le prénom doit contenir au moins 3 caractères"
+  lastname:
+    not_blank: "Le nom ne peut pas être vide"
+    min: "Le nom doit contenir au moins 3 caractères"
+

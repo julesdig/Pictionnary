@@ -16,9 +16,41 @@ list-files: ## List files in S3
 
 s3-init: create-bucket upload-file list-files
 
-init-project: ## Initialize project (Docker + DB setup + Composer install)
+init-docker: ## Initialize Docker containers
 	docker compose up -d --build
-	docker exec -it meet-u_php php bin/console composer install
-	docker exec -it meet-u_php php bin/console doctrine:database:create --if-not-exists
-	docker exec -it meet-u_php php bin/console doctrine:schema:update --force
+	@echo "✅ Docker containers initialized successfully!"
+composer-install: ## Install Composer dependencies
+	docker exec -it pictionary_php composer install
+	@echo "✅ Composer dependencies installed successfully!"
+
+create-db: ## Create the database
+	docker exec -it pictionary_php php bin/console doctrine:database:create --if-not-exists
+	@echo "✅ Database created successfully!"
+
+update-db: ## Update the database schema
+	docker exec -it pictionary_php php bin/console doctrine:schema:update --force
+	@echo "✅ Database schema updated successfully!"
+init-project: ## Initialize project (Docker + DB setup + Composer install)
+	$(MAKE) init-docker
+	$(MAKE) composer-install
+	$(MAKE) create-db
+	$(MAKE) update-db
 	@echo "✅ Project initialized successfully!"
+
+phpcs: ## play phpcs
+	docker exec -it pictionary_php php bin/phpcs
+
+phpcbf: ## play phpcbf
+	docker exec -it pictionary_php php bin/phpcbf
+
+phpmd: ## play phpcs
+	docker exec -it pictionary_php php bin/phpmd  src/ text phpmd.xml
+
+phpstan: ## play phpcs
+	docker exec -it pictionary_php php bin/phpstan analyse src
+
+coding-standards: ## Check coding standards
+	$(MAKE) phpcbf
+	$(MAKE) phpcs
+	$(MAKE) phpmd
+	$(MAKE) phpstan

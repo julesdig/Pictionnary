@@ -13,13 +13,12 @@ use Symfony\Component\Validator\Constraints\PasswordStrength;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity('email')]
-#[UniqueEntity('device')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
     #[Assert\Email(message: "user.email.type")]
     #[Assert\NotBlank(message: "user.email.not_blank")]
     #[ORM\Column(length: 180)]
@@ -28,7 +27,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank(message: "user.firstname.not_blank")]
     #[Assert\Length(min: 3, max: 50, minMessage: 'user.firstname.min')]
     #[ORM\Column(type: 'text', length: 50, nullable: false)]
-    private string $firstName;
+    private string $firstName ;
     #[Assert\NotBlank(message: "user.lastname.not_blank")]
     #[Assert\Length(min: 3, max: 50, minMessage: 'user.lastname.min')]
     #[ORM\Column(type: 'text', length: 50, nullable: false)]
@@ -38,14 +37,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private array $roles = [];
-
-    /**
-     * @var string The hashed password
-     */
     #[Assert\Length(min: 12, max: 255, minMessage: 'user.password.min')]
-    #[Assert\PasswordStrength( minScore: PasswordStrength::STRENGTH_VERY_STRONG)]
+    #[Assert\PasswordStrength(minScore: PasswordStrength::STRENGTH_VERY_STRONG)]
     #[Assert\NotCompromisedPassword]
-    #[Assert\Regex(pattern: '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.* )(?=.*[^a-zA-Z0-9]).{12,}$/', message: 'user.password.regex')]
+    #[Assert\Regex(
+        pattern: '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.* )(?=.*[^a-zA-Z0-9]).{12,}$/',
+        message: 'user.password.regex'
+    )]
     #[ORM\Column(type: 'string', length: 255, nullable: false)]
     private string $password;
 
@@ -147,5 +145,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->getUserIdentifier();
     }
-
 }

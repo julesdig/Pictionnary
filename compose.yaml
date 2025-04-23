@@ -1,79 +1,82 @@
 services:
-    ##############################
-    #          [Nginx]          ##
-    ##############################
-    nginx:
-      build:
-        context: .docker/nginx
-        args:
-          USER: ${USER}
-          TZ: ${TZ}
-          WORKDIR_SERVER: /var/www/${NAMESPACE}
-          SERVER_NAME: ${SERVER_NAME}
-          SERVER_PATH: ${SERVER_PATH}
-      container_name: ${NAMESPACE}_nginx
-      working_dir: /var/www/${NAMESPACE}
-      depends_on:
-        - php
-      ports:
-        - ${WEBSERVER_SECURE_PORT}:443
-        - ${WEBSERVER_UNSECURE_PORT}:80
-      volumes:
-        - ${PWD}:/var/www/${NAMESPACE}:delegated
-        # [PHP]
-        - php_socket:/var/run/php
+  ##############################
+  #          [Nginx]          ##
+  ##############################
+  nginx:
+    build:
+      context: .docker/nginx
+      args:
+        USER: ${USER}
+        TZ: ${TZ}
+        WORKDIR_SERVER: /var/www/${NAMESPACE}
+        SERVER_NAME: ${SERVER_NAME}
+        SERVER_PATH: ${SERVER_PATH}
+    container_name: ${NAMESPACE}_nginx
+    working_dir: /var/www/${NAMESPACE}
+    depends_on:
+      - php
+    ports:
+      - ${WEBSERVER_SECURE_PORT}:443
+      - ${WEBSERVER_UNSECURE_PORT}:80
+    volumes:
+      - ${PWD}:/var/www/${NAMESPACE}:delegated
+      # [PHP]
+      - php_socket:/var/run/php
 
-    ###############################
-    ##           [PHP]           ##
-    ###############################
-    php:
-      build:
-        context: .docker/php
-        args:
-          USER: ${USER}
-          TZ: ${TZ}
-          PHP_VERSION_SET_IMAGE: php:${PHP_VERSION_SET:-8.4}-fpm-alpine
-          PHP_VERSION_SET: ${PHP_VERSION_SET:-8.4}
-          WORKDIR_SERVER: /var/www/${NAMESPACE}
-          XDEBUG_ENABLE: 1
-      container_name: ${NAMESPACE}_php
-      extra_hosts:
-        - "host.docker.internal:host-gateway"
-      working_dir: /var/www/${NAMESPACE}
-      volumes:
-        - ${PWD}:/var/www/${NAMESPACE}:delegated
-        - php_socket:/var/run/php:cached
-        - ${PWD}/.docker/php/conf/extra/php-ini-overrides.ini:/usr/local/etc/php/conf.d/php-ini-overrides.ini
+  ###############################
+  ##           [PHP]           ##
+  ###############################
+  php:
+    build:
+      context: .docker/php
+      args:
+        USER: ${USER}
+        TZ: ${TZ}
+        PHP_VERSION_SET_IMAGE: php:${PHP_VERSION_SET:-8.4}-fpm-alpine
+        PHP_VERSION_SET: ${PHP_VERSION_SET:-8.4}
+        WORKDIR_SERVER: /var/www/${NAMESPACE}
+        XDEBUG_ENABLE: 1
+    container_name: ${NAMESPACE}_php
+    environment:
+      PHP_IDE_CONFIG: "serverName=localhost"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    working_dir: /var/www/${NAMESPACE}
+    volumes:
+      - ${PWD}:/var/www/${NAMESPACE}:delegated
+      - php_socket:/var/run/php:cached
+      - ${PWD}/.docker/php/conf/extra/php-ini-overrides.ini:/usr/local/etc/php/conf.d/php-ini-overrides.ini
 
-    ###############################
-    ##         [Database]        ##
-    ###############################
-    database:
-      build:
-        context: .docker/SQL
-      container_name: ${NAMESPACE}_db
-      restart: always
-      environment:
-        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      ports:
-        - "3306:3306"
-      volumes:
-        - mysql_data:/var/lib/mysql
-    ###############################
-    ##         [Service AWS]        ##
-    ###############################
-    localstack:
-      image: localstack/localstack
-      container_name: localstack_${NAMESPACE}
-      environment:
-        - SERVICES=s3
-        - DEFAULT_REGION=us-east-1
-        - AWS_ACCESS_KEY_ID=test
-        - AWS_SECRET_ACCESS_KEY=test
-      ports:
-        - "4566:4566" # Port LocalStack
-      volumes:
-        - "/var/run/docker.sock:/var/run/docker.sock"
+  ###############################
+  ##         [Database]        ##
+  ###############################
+  database:
+    build:
+      context: .docker/SQL
+    container_name: ${NAMESPACE}_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  ###############################
+  ##         [Service AWS]        ##
+  ###############################
+  localstack:
+    image: localstack/localstack
+    container_name: localstack_${NAMESPACE}
+    environment:
+      - SERVICES=s3
+      - DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+    ports:
+      - "4566:4566" # Port LocalStack
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
 
 volumes:
   ###############################
