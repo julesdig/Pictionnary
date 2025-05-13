@@ -5,14 +5,13 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-
-#[Route('', name: 'dashboard.')]
-class DashboardController extends AbstractController
+#[Route('', name: 'game.')]
+class GameController extends AbstractController
 {
-    #[Route('index', name: 'index')]
-    public function index(): Response
+    #[Route('start', name: 'start')]
+    public function create(): Response
     {
-
+dd("game");
         return $this->render('dashboard/index.html.twig', [
 
             ]

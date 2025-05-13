@@ -1,9 +1,14 @@
 {% extends "base.html.twig" %}
 
-{% block title %}titre {% endblock %}
+{% block title %}Accueil{% endblock %}
 
 {% block importmap %}{{ importmap(['app']) }}{% endblock %}
 
-{% block content %}
-    <p> user</p>
+{% block full_content %}
+    <div class="d-flex flex-column justify-content-center align-items-center vh-100 bg-light">
+        <h1 class="display-4 text-primary mb-4">Bienvenue sur le jeu !</h1>
+        <p class="lead text-secondary mb-5">Prêt à commencer une nouvelle aventure ?</p>
+        <a href="{{ path('game.start') }}" class="btn btn-lg btn-success px-5 py-3">Démarrer une partie</a>
+    </div>
+
 {% endblock %}
