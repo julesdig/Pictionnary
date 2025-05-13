@@ -13,12 +13,8 @@
 namespace Composer;
 
 $GLOBALS['_composer_bin_dir'] = __DIR__;
-$GLOBALS['_composer_autoload_path'] = __DIR__.'/..'.'/vendor/autoload.php';
-$GLOBALS['__PHPUNIT_ISOLATION_EXCLUDE_LIST'] = $GLOBALS['__PHPUNIT_ISOLATION_BLACKLIST'] = array(
-    realpath(
-        __DIR__.'/..'.'/vendor/phpunit/phpunit/phpunit'
-    ),
-);
+$GLOBALS['_composer_autoload_path'] = __DIR__ . '/..'.'/vendor/autoload.php';
+$GLOBALS['__PHPUNIT_ISOLATION_EXCLUDE_LIST'] = $GLOBALS['__PHPUNIT_ISOLATION_BLACKLIST'] = array(realpath(__DIR__ . '/..'.'/vendor/phpunit/phpunit/phpunit'));
 
 if (PHP_VERSION_ID < 80000) {
     if (!class_exists('Composer\BinProxyWrapper')) {
@@ -40,7 +36,7 @@ if (PHP_VERSION_ID < 80000) {
                 $this->handle = fopen($this->realpath, $mode);
                 $this->position = 0;
 
-                return (bool)$this->handle;
+                return (bool) $this->handle;
             }
 
             public function stream_read($count)
@@ -77,7 +73,6 @@ if (PHP_VERSION_ID < 80000) {
             {
                 if (0 === fseek($this->handle, $offset, $whence)) {
                     $this->position = ftell($this->handle);
-
                     return true;
                 }
 
@@ -118,13 +113,10 @@ if (PHP_VERSION_ID < 80000) {
 
     if (
         (function_exists('stream_get_wrappers') && in_array('phpvfscomposer', stream_get_wrappers(), true))
-        || (function_exists('stream_wrapper_register') && stream_wrapper_register(
-                'phpvfscomposer',
-                'Composer\BinProxyWrapper'
-            ))
+        || (function_exists('stream_wrapper_register') && stream_wrapper_register('phpvfscomposer', 'Composer\BinProxyWrapper'))
     ) {
-        return include("phpvfscomposer://".__DIR__.'/..'.'/vendor/phpunit/phpunit/phpunit');
+        return include("phpvfscomposer://" . __DIR__ . '/..'.'/vendor/phpunit/phpunit/phpunit');
     }
 }
 
-return include __DIR__.'/..'.'/vendor/phpunit/phpunit/phpunit';
+return include __DIR__ . '/..'.'/vendor/phpunit/phpunit/phpunit';

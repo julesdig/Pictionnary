@@ -55,7 +55,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         }
         return new RedirectResponse($this->urlGenerator->generate(
             $this->security->isGranted('ROLE_ADMIN')
-                ? 'admin_dashboard.index'
+                ? 'admin'
                 : 'dashboard.index',
             [],
             UrlGeneratorInterface::ABSOLUTE_URL

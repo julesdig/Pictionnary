@@ -28,3 +28,4 @@
 .DS_Store
 compose.override.yml
 /bin/
+/public/uploads/
