@@ -47,7 +47,7 @@ class SecurityControllerTest extends WebTestCase
         yield 'admin' => [
             'email'=> 'admin@gmail.com',
             'password' => 'admin',
-            'expectedResult' => 'admin_dashboard.index',
+            'expectedResult' => 'admin',
         ];
         yield 'user' => [
             'email'=> 'user@gmail.com',
