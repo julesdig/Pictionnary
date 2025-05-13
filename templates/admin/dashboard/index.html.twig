@@ -1,9 +1,13 @@
-{% extends "base.html.twig" %}
+{% extends '@EasyAdmin/page/content.html.twig' %}
 
-{% block title %}titre {% endblock %}
+{% block main %}
 
-{% block importmap %}{{ importmap(['app']) }}{% endblock %}
+    <div style="height: 400px;">
+        {{ render_chart(chart) }}
+    </div>
 
-{% block content %}
-<p> admin</p>
+
+
+    <div data-controller="test">Hello Stimulus</div>
+
 {% endblock %}
