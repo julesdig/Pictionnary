@@ -23,6 +23,11 @@ export default class extends Controller {
         this.gameResults = [];
         this.submissionTimer = null;
 
+        // Initialize drawing coordinates tracking
+        this.currentStroke = [];
+        this.strokes = [];
+        this.timestamps = [];
+
         // Get game data from hidden inputs
         this.gameId = this.gameIdTarget.value;
         this.words = this.drawingWordsTargets.map(el => el.value);
@@ -39,6 +44,12 @@ export default class extends Controller {
         const [x, y] = this.getCoordinates(event);
         this.ctx.beginPath();
         this.ctx.moveTo(x, y);
+
+
+        const t = 0;
+        // Start a new stroke and record the first point with timestamp
+        this.timestamps = Date.now();
+        this.currentStroke = [[x], [y], [t]];
     }
 
     draw(event) {
@@ -46,11 +57,22 @@ export default class extends Controller {
         const [x, y] = this.getCoordinates(event);
         this.ctx.lineTo(x, y);
         this.ctx.stroke();
+
+        // Record the point with timestamp
+        const t = Date.now() - this.timestamps;
+        console.log(t);
+        this.currentStroke[0].push(x);
+        this.currentStroke[1].push(y);
+        this.currentStroke[2].push(t);
     }
 
     stopDrawing() {
+        if (this.isDrawing && this.currentStroke.length > 0) {
+            // Add the completed stroke to the strokes array
+            this.strokes.push(this.currentStroke);
+            this.currentStroke = [];
+        }
         this.isDrawing = false;
-        this.submitDrawing()
     }
 
     clearCanvas() {
@@ -62,6 +84,10 @@ export default class extends Controller {
             clearTimeout(this.submissionTimer);
             this.submissionTimer = null;
         }
+
+        // Clear the strokes data
+        this.strokes = [];
+        this.currentStroke = [];
 
         // Hide the result area
         this.resultTarget.classList.add('d-none');
@@ -111,8 +137,8 @@ export default class extends Controller {
         this.resultTarget.classList.remove('d-none', 'alert-success', 'alert-danger');
         this.resultTarget.classList.add('alert-info');
 
-        // Get the drawing data
-        const drawingData = this.canvasTarget.toDataURL();
+        // Get the drawing data as vector coordinates
+        const drawingData = this.strokes;
         const currentWord = this.words[this.currentDrawingIndex];
         const drawingId = this.drawingIds[this.currentDrawingIndex];
 
@@ -136,7 +162,7 @@ export default class extends Controller {
                 this.gameResults.push({
                     word: currentWord,
                     recognized: isRecognized,
-                    drawingData: drawingData,
+                    drawingData: drawingData, // Now contains vector coordinates
                     guesses: guesses
                 });
 
@@ -199,7 +225,7 @@ export default class extends Controller {
     }
 
     saveDrawing(drawingId, drawingData, isRecognized) {
-        // Send the drawing data to the server
+        // Send the drawing data to the server (now as vector coordinates)
         fetch('/api/drawing/' + drawingId, {
             method: 'POST',
             headers: {
@@ -245,8 +271,4 @@ export default class extends Controller {
         });
     }
 
-    // Handle manual submission of drawings
-    manualSubmit() {
-        this.submitDrawing();
-    }
 }

@@ -52,7 +52,7 @@ class GameController extends AbstractController
         }
 
         // Update the drawing with the data
-        $drawing->setDrawing(['data' => $data['drawing']]);
+        $drawing->setDrawing( $data['drawing']);
         $drawing->setRecognized($data['recognized']);
         $drawing->setIsStarted(true);
 

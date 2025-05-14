@@ -24,7 +24,6 @@ class GameManager
         $game->setScore(0);
         $game->setDate(new DateTime());
         foreach ($words as $word) {
-            dump($word);
             $drawing = new Drawing();
             $drawing->setWord($word);
             $this->manager->persist($drawing);

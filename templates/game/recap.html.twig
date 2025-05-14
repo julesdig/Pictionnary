@@ -5,7 +5,7 @@
 {% block importmap %}{{ importmap(['app']) }}{% endblock %}
 
 {% block full_content %}
-<div class="container mt-4">
+<div class="container mt-4" data-controller="recap">
     <div class="row mb-4">
         <div class="col-12">
             <div class="card">
@@ -14,7 +14,7 @@
                 </div>
                 <div class="card-body">
                     <h3>Final Score: {{ game.score }}</h3>
-                    
+
                     <div class="row mt-4">
                         {% for drawing in game.drawing %}
                             <div class="col-md-4 mb-3">
@@ -23,8 +23,9 @@
                                         {{ drawing.word }} - {% if drawing.recognized %}Recognized{% else %}Not Recognized{% endif %}
                                     </div>
                                     <div class="card-body">
-                                        {% if drawing.drawing.data is defined %}
-                                            <img src="{{ drawing.drawing.data }}" class="img-fluid" alt="{{ drawing.word }}">
+                                        {% if drawing.drawing is defined %}
+                                            <canvas width="300" height="200" class="border" data-recap-target="canvas"></canvas>
+                                            <input type="hidden" data-recap-target="drawingData" value="{{ drawing.drawing|json_encode|e('html_attr') }}">
                                         {% else %}
                                             <p class="text-muted">No drawing data available</p>
                                         {% endif %}
@@ -33,7 +34,7 @@
                             </div>
                         {% endfor %}
                     </div>
-                    
+
                     <div class="mt-4">
                         <a href="{{ path('game.start') }}" class="btn btn-primary">Play Again</a>
                         <a href="{{ path('dashboard.index') }}" class="btn btn-secondary">Back to Dashboard</a>
