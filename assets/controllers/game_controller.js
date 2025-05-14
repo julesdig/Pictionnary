@@ -21,6 +21,7 @@ export default class extends Controller {
         this.currentDrawingIndex = 0;
         this.drawings = [];
         this.gameResults = [];
+        this.submissionTimer = null;
 
         // Get game data from hidden inputs
         this.gameId = this.gameIdTarget.value;
@@ -49,10 +50,21 @@ export default class extends Controller {
 
     stopDrawing() {
         this.isDrawing = false;
+        this.submitDrawing()
     }
 
     clearCanvas() {
+        // Clear the canvas
         this.ctx.clearRect(0, 0, this.canvasTarget.width, this.canvasTarget.height);
+
+        // Clear any pending submission timer
+        if (this.submissionTimer) {
+            clearTimeout(this.submissionTimer);
+            this.submissionTimer = null;
+        }
+
+        // Hide the result area
+        this.resultTarget.classList.add('d-none');
     }
 
     // Helper to get coordinates from mouse or touch event
@@ -94,58 +106,96 @@ export default class extends Controller {
     submitDrawing() {
         clearInterval(this.timer);
 
+        // Show processing indicator
+        this.resultTarget.textContent = "Processing your drawing...";
+        this.resultTarget.classList.remove('d-none', 'alert-success', 'alert-danger');
+        this.resultTarget.classList.add('alert-info');
+
         // Get the drawing data
         const drawingData = this.canvasTarget.toDataURL();
-
-        // Simulate AI guessing (random for now)
-        const isRecognized = Math.random() > 0.5;
         const currentWord = this.words[this.currentDrawingIndex];
         const drawingId = this.drawingIds[this.currentDrawingIndex];
 
-        // Save the result
-        this.gameResults.push({
-            word: currentWord,
-            recognized: isRecognized,
-            drawingData: drawingData
-        });
+        // Call the server to get AI guesses
+        fetch('/api/drawing/' + drawingId + '/guess', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                drawing: drawingData
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const guesses = data.guesses;
+                const isRecognized = guesses[0] === currentWord; // First guess matches the actual word
 
-        // Update the score
-        let currentScore = parseInt(this.scoreTarget.textContent);
-        if (isRecognized) {
-            currentScore += 10;
-            this.scoreTarget.textContent = currentScore;
-            this.resultTarget.textContent = `Correct! The AI recognized your drawing of "${currentWord}"`;
-            this.resultTarget.classList.remove('d-none', 'alert-danger');
-            this.resultTarget.classList.add('alert-success');
-        } else {
-            this.resultTarget.textContent = `Sorry, the AI didn't recognize your drawing of "${currentWord}"`;
-            this.resultTarget.classList.remove('d-none', 'alert-success');
+                // Save the result
+                this.gameResults.push({
+                    word: currentWord,
+                    recognized: isRecognized,
+                    drawingData: drawingData,
+                    guesses: guesses
+                });
+
+                // Update the score
+                let currentScore = parseInt(this.scoreTarget.textContent);
+                if (isRecognized) {
+                    currentScore += 10;
+                    this.scoreTarget.textContent = currentScore;
+                    this.resultTarget.innerHTML = `<p>Correct! The AI recognized your drawing:</p>
+                        <p>1. <strong>${guesses[0]}</strong> (correct!)</p>
+                        <p>2. ${guesses[1]}</p>
+                        <p>3. ${guesses[2]}</p>`;
+                    this.resultTarget.classList.remove('d-none', 'alert-danger');
+                    this.resultTarget.classList.add('alert-success');
+                } else {
+                    this.resultTarget.innerHTML = `<p>Sorry, the AI didn't recognize your drawing of "${currentWord}":</p>
+                        <p>1. ${guesses[0]}</p>
+                        <p>2. ${guesses[1]}</p>
+                        <p>3. ${guesses[2]}</p>`;
+                    this.resultTarget.classList.remove('d-none', 'alert-success');
+                    this.resultTarget.classList.add('alert-danger');
+                }
+
+                // Save the drawing to the server
+                this.saveDrawing(drawingId, drawingData, isRecognized);
+
+                // Move to the next drawing or end the game
+                this.currentDrawingIndex++;
+
+                if (this.currentDrawingIndex < this.words.length) {
+                    // Next drawing
+                    setTimeout(() => {
+                        this.clearCanvas();
+                        this.currentWordTarget.textContent = this.words[this.currentDrawingIndex];
+                        this.resultTarget.classList.add('d-none');
+                        this.resetTimer();
+                    }, 3000); // Increased timeout to give users more time to see the AI guesses
+                } else {
+                    // Game over
+                    setTimeout(() => {
+                        this.endGame();
+                    }, 3000); // Increased timeout to give users more time to see the AI guesses
+                }
+
+                // Update remaining count
+                this.remainingTarget.textContent = this.words.length - this.currentDrawingIndex;
+            } else {
+                console.error('Error getting AI guesses:', data.error);
+                this.resultTarget.textContent = "Error processing your drawing. Please try again.";
+                this.resultTarget.classList.remove('d-none', 'alert-success', 'alert-info');
+                this.resultTarget.classList.add('alert-danger');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            this.resultTarget.textContent = "Error processing your drawing. Please try again.";
+            this.resultTarget.classList.remove('d-none', 'alert-success', 'alert-info');
             this.resultTarget.classList.add('alert-danger');
-        }
-
-        // Save the drawing to the server
-        this.saveDrawing(drawingId, drawingData, isRecognized);
-
-        // Move to the next drawing or end the game
-        this.currentDrawingIndex++;
-
-        if (this.currentDrawingIndex < this.words.length) {
-            // Next drawing
-            setTimeout(() => {
-                this.clearCanvas();
-                this.currentWordTarget.textContent = this.words[this.currentDrawingIndex];
-                this.resultTarget.classList.add('d-none');
-                this.resetTimer();
-            }, 2000);
-        } else {
-            // Game over
-            setTimeout(() => {
-                this.endGame();
-            }, 2000);
-        }
-
-        // Update remaining count
-        this.remainingTarget.textContent = this.words.length - this.currentDrawingIndex;
+        });
     }
 
     saveDrawing(drawingId, drawingData, isRecognized) {
@@ -193,5 +243,10 @@ export default class extends Controller {
         .catch(error => {
             console.error('Error saving game score:', error);
         });
+    }
+
+    // Handle manual submission of drawings
+    manualSubmit() {
+        this.submitDrawing();
     }
 }

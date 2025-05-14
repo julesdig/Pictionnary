@@ -62,6 +62,61 @@ class GameController extends AbstractController
         return $this->json(['success' => true, 'id' => $drawing->getId()]);
     }
 
+    #[Route('/api/drawing/{id}/guess', name: 'api_guess_drawing', methods: ['POST'])]
+    public function guessDrawing(
+        Request $request,
+        Drawing $drawing,
+        DrawingManager $drawingManager
+    ): JsonResponse {
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['drawing'])) {
+            return $this->json(['error' => 'Drawing data is required'], 400);
+        }
+
+        // Get the actual word for this drawing
+        $actualWord = $drawing->getWord();
+
+        // Simulate AI guessing with 3 words
+        // In a real implementation, this would call an AI service
+        $words = $drawingManager->findDistinctWords();
+        $words = array_column($words, 'word');
+        shuffle($words);
+
+        // Randomly decide if the AI recognizes the drawing
+        $isRecognized = (mt_rand(0, 1) == 1);
+
+        $guesses = [];
+        if ($isRecognized) {
+            // If recognized, the first guess is the correct word
+            $guesses[] = $actualWord;
+
+            // Add two more random words that are not the actual word
+            $otherWords = array_filter($words, function($word) use ($actualWord) {
+                return $word !== $actualWord;
+            });
+            $otherWords = array_values($otherWords);
+
+            $guesses[] = $otherWords[0] ?? 'unknown';
+            $guesses[] = $otherWords[1] ?? 'unknown';
+        } else {
+            // If not recognized, all three guesses are random words
+            $randomWords = array_filter($words, function($word) use ($actualWord) {
+                return $word !== $actualWord;
+            });
+            $randomWords = array_values($randomWords);
+
+            $guesses[] = $randomWords[0] ?? 'unknown';
+            $guesses[] = $randomWords[1] ?? 'unknown';
+            $guesses[] = $randomWords[2] ?? 'unknown';
+        }
+        return $this->json([
+            'success' => true,
+            'guesses' => $guesses,
+            'isRecognized' => $isRecognized
+        ]);
+    }
+
     #[Route('/api/game/{id}', name: 'api_save_game_score', methods: ['POST'])]
     public function saveGameScore(
         Request $request, 
