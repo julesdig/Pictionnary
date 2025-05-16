@@ -20,6 +20,10 @@ return [
         'path' => './assets/admin.js',
         'entrypoint' => true,
     ],
+    'game_controller' => [
+        'path' => './assets/controllers/game_controller.js',
+        'entrypoint' => true,
+    ],
     '@symfony/stimulus-bundle' => [
         'path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js',
     ],

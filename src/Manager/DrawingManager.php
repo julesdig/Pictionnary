@@ -13,6 +13,15 @@ class DrawingManager
     ) {
     }
 
+    public function findDistinctWords():array
+    {
+        $query = $this->manager->createQueryBuilder()
+            ->select('DISTINCT d.word')
+            ->from(Drawing::class, 'd')
+            ->getQuery();
+
+        return $query->getResult();
+    }
     public function save(Drawing $drawing): Drawing
     {
         $this->manager->persist($drawing);
