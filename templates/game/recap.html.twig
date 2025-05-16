@@ -24,7 +24,7 @@
                                     </div>
                                     <div class="card-body">
                                         {% if drawing.drawing is defined %}
-                                            <canvas width="300" height="200" class="border" data-recap-target="canvas"></canvas>
+                                            <canvas width="400" height="300" class="border" data-recap-target="canvas"></canvas>
                                             <input type="hidden" data-recap-target="drawingData" value="{{ drawing.drawing|json_encode|e('html_attr') }}">
                                         {% else %}
                                             <p class="text-muted">No drawing data available</p>
