@@ -50,7 +50,7 @@ class GameController extends AbstractController
             return $this->json(['error' => 'Invalid data'], 400);
         }
 
-        $drawing->setDrawing( $data['drawing']);
+        $drawing->setDrawing($data['drawing']);
         $drawing->setRecognized($data['recognized']);
         $drawing->setIsStarted(true);
         $drawingManager->save($drawing);
@@ -77,13 +77,9 @@ class GameController extends AbstractController
         $words = array_column($words, 'word');
         $randomWord = $words[array_rand($words)];
 
+
         $isRecognized = $randomWord === $expectedWord;
 
-        dump([
-            'success' => true,
-            'guess' => $randomWord,
-            'isRecognized' => $isRecognized
-        ]);
         return $this->json([
             'success' => true,
             'guess' => $randomWord,

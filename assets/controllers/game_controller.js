@@ -27,6 +27,7 @@ export default class extends Controller {
         this.currentStroke = [];
         this.strokes = [];
         this.timestamps = [];
+        this.isRecognized = false;
 
         // Get game data from hidden inputs
         this.gameId = this.gameIdTarget.value;
@@ -115,7 +116,7 @@ export default class extends Controller {
             this.timerTarget.textContent = this.timeLeft;
 
             if (this.timeLeft <= 0) {
-                this.submitDrawing();
+                this.submitDrawing(true);
             }
         }, 1000);
     }
@@ -127,7 +128,7 @@ export default class extends Controller {
     }
 
     // Game flow functions
-    submitDrawing() {
+    submitDrawing(forceNext = false) {
 
 
         // Show processing indicator
@@ -169,14 +170,18 @@ export default class extends Controller {
 
                 // Update the score
                 let currentScore = parseInt(this.scoreTarget.textContent);
-                if (isRecognized) {
+                if (isRecognized || forceNext) {
                     clearInterval(this.timer);
-                    currentScore += 10;
+                   if (isRecognized)
+                   {
+                       currentScore += 10;
+
                     this.scoreTarget.textContent = currentScore;
                     this.resultTarget.innerHTML = `<p>Correct! The AI recognized your drawing:</p>
                         <p>1. <strong>${guess}</strong> (correct!)</p>`;
                     this.resultTarget.classList.remove('d-none', 'alert-danger');
                     this.resultTarget.classList.add('alert-success');
+                   }
                     this.saveDrawing(drawingId, drawingData, isRecognized);
                     this.currentDrawingIndex++;
 

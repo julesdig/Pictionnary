@@ -1,4 +1,5 @@
-
+XDEBUG_INI_PATH=/usr/local/etc/php/conf.d/xdebug.ini
+PHP_CONTAINER_NAME=pictionary_php
 S3_BUCKET_URL=http://localhost:4566/local-bucket
 .DEFAULT_GOAL := help
 .PHONY : help
@@ -54,3 +55,12 @@ coding-standards: ## Check coding standards
 	$(MAKE) phpcs
 	$(MAKE) phpmd
 	$(MAKE) phpstan
+
+
+enable-xdebug: ## Enable xdebug
+	docker exec -it $(PHP_CONTAINER_NAME) sh -c "sed -i 's/^xdebug.mode=.*/xdebug.mode=develop,coverage,debug,profile/' $(XDEBUG_INI_PATH)"
+	docker restart $(PHP_CONTAINER_NAME)
+
+disable-xdebug: ## Disable xdebug
+	docker exec -it $(PHP_CONTAINER_NAME) sh -c "sed -i 's/^xdebug.mode=.*/xdebug.mode=off/' $(XDEBUG_INI_PATH)"
+	docker restart $(PHP_CONTAINER_NAME)
