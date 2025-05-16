@@ -128,7 +128,7 @@ export default class extends Controller {
 
     // Game flow functions
     submitDrawing() {
-        clearInterval(this.timer);
+
 
         // Show processing indicator
         if (!this.resultTarget.textContent.trim()) {
@@ -170,6 +170,7 @@ export default class extends Controller {
                 // Update the score
                 let currentScore = parseInt(this.scoreTarget.textContent);
                 if (isRecognized) {
+                    clearInterval(this.timer);
                     currentScore += 10;
                     this.scoreTarget.textContent = currentScore;
                     this.resultTarget.innerHTML = `<p>Correct! The AI recognized your drawing:</p>
