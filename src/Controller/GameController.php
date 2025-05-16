@@ -43,7 +43,6 @@ class GameController extends AbstractController
         Request $request, 
         Drawing $drawing, 
         DrawingManager $drawingManager,
-        EntityManagerInterface $entityManager
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
 
@@ -51,12 +50,9 @@ class GameController extends AbstractController
             return $this->json(['error' => 'Invalid data'], 400);
         }
 
-        // Update the drawing with the data
         $drawing->setDrawing( $data['drawing']);
         $drawing->setRecognized($data['recognized']);
         $drawing->setIsStarted(true);
-
-        // Save the drawing
         $drawingManager->save($drawing);
 
         return $this->json(['success' => true, 'id' => $drawing->getId()]);
@@ -71,48 +67,26 @@ class GameController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         if (!isset($data['drawing'])) {
-            return $this->json(['error' => 'Drawing data is required'], 400);
+            return $this->json(['error' => 'Drawing and expectedWord are required'], 400);
         }
 
-        // Get the actual word for this drawing
-        $actualWord = $drawing->getWord();
+        $expectedWord = $drawing->getWord();
 
-        // Simulate AI guessing with 3 words
-        // In a real implementation, this would call an AI service
+        // Simulate AI guesses
         $words = $drawingManager->findDistinctWords();
         $words = array_column($words, 'word');
-        shuffle($words);
+        $randomWord = $words[array_rand($words)];
 
-        // Randomly decide if the AI recognizes the drawing
-        $isRecognized = (mt_rand(0, 1) == 1);
+        $isRecognized = $randomWord === $expectedWord;
 
-        $guesses = [];
-        if ($isRecognized) {
-            // If recognized, the first guess is the correct word
-            $guesses[] = $actualWord;
-
-            // Add two more random words that are not the actual word
-            $otherWords = array_filter($words, function($word) use ($actualWord) {
-                return $word !== $actualWord;
-            });
-            $otherWords = array_values($otherWords);
-
-            $guesses[] = $otherWords[0] ?? 'unknown';
-            $guesses[] = $otherWords[1] ?? 'unknown';
-        } else {
-            // If not recognized, all three guesses are random words
-            $randomWords = array_filter($words, function($word) use ($actualWord) {
-                return $word !== $actualWord;
-            });
-            $randomWords = array_values($randomWords);
-
-            $guesses[] = $randomWords[0] ?? 'unknown';
-            $guesses[] = $randomWords[1] ?? 'unknown';
-            $guesses[] = $randomWords[2] ?? 'unknown';
-        }
+        dump([
+            'success' => true,
+            'guess' => $randomWord,
+            'isRecognized' => $isRecognized
+        ]);
         return $this->json([
             'success' => true,
-            'guesses' => $guesses,
+            'guess' => $randomWord,
             'isRecognized' => $isRecognized
         ]);
     }

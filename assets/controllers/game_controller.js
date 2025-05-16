@@ -38,7 +38,6 @@ export default class extends Controller {
         this.startTimer();
     }
 
-    // Drawing functions
     startDrawing(event) {
         this.isDrawing = true;
         const [x, y] = this.getCoordinates(event);
@@ -60,7 +59,6 @@ export default class extends Controller {
 
         // Record the point with timestamp
         const t = Date.now() - this.timestamps;
-        console.log(t);
         this.currentStroke[0].push(x);
         this.currentStroke[1].push(y);
         this.currentStroke[2].push(t);
@@ -71,6 +69,7 @@ export default class extends Controller {
             // Add the completed stroke to the strokes array
             this.strokes.push(this.currentStroke);
             this.currentStroke = [];
+            this.submitDrawing();
         }
         this.isDrawing = false;
     }
@@ -120,7 +119,6 @@ export default class extends Controller {
             }
         }, 1000);
     }
-
     resetTimer() {
         clearInterval(this.timer);
         this.timeLeft = 20;
@@ -133,9 +131,11 @@ export default class extends Controller {
         clearInterval(this.timer);
 
         // Show processing indicator
-        this.resultTarget.textContent = "Processing your drawing...";
-        this.resultTarget.classList.remove('d-none', 'alert-success', 'alert-danger');
-        this.resultTarget.classList.add('alert-info');
+        if (!this.resultTarget.textContent.trim()) {
+            this.resultTarget.textContent = "Processing your drawing...";
+            this.resultTarget.classList.remove('d-none', 'alert-success', 'alert-danger');
+            this.resultTarget.classList.add('alert-info');
+        }
 
         // Get the drawing data as vector coordinates
         const drawingData = this.strokes;
@@ -155,15 +155,16 @@ export default class extends Controller {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                const guesses = data.guesses;
-                const isRecognized = guesses[0] === currentWord; // First guess matches the actual word
+
+                const isRecognized = data.isRecognized;
+                const guess = data.guess;
 
                 // Save the result
                 this.gameResults.push({
                     word: currentWord,
                     recognized: isRecognized,
-                    drawingData: drawingData, // Now contains vector coordinates
-                    guesses: guesses
+                    drawingData: drawingData,
+                    guess: guess
                 });
 
                 // Update the score
@@ -172,43 +173,38 @@ export default class extends Controller {
                     currentScore += 10;
                     this.scoreTarget.textContent = currentScore;
                     this.resultTarget.innerHTML = `<p>Correct! The AI recognized your drawing:</p>
-                        <p>1. <strong>${guesses[0]}</strong> (correct!)</p>
-                        <p>2. ${guesses[1]}</p>
-                        <p>3. ${guesses[2]}</p>`;
+                        <p>1. <strong>${guess}</strong> (correct!)</p>`;
                     this.resultTarget.classList.remove('d-none', 'alert-danger');
                     this.resultTarget.classList.add('alert-success');
+                    this.saveDrawing(drawingId, drawingData, isRecognized);
+                    this.currentDrawingIndex++;
+
+                    if (this.currentDrawingIndex < this.words.length) {
+                        // Next drawing
+                        setTimeout(() => {
+                            this.clearCanvas();
+                            this.currentWordTarget.textContent = this.words[this.currentDrawingIndex];
+                            this.resultTarget.classList.add('d-none');
+                            this.resetTimer();
+                        }, 3000); // Increased timeout to give users more time to see the AI guesses
+                    } else {
+                        // Game over
+                        setTimeout(() => {
+                            this.endGame();
+                        }, 3000); // Increased timeout to give users more time to see the AI guesses
+                    }
+
+                    // Update remaining count
+                    this.remainingTarget.textContent = this.words.length - this.currentDrawingIndex;
                 } else {
                     this.resultTarget.innerHTML = `<p>Sorry, the AI didn't recognize your drawing of "${currentWord}":</p>
-                        <p>1. ${guesses[0]}</p>
-                        <p>2. ${guesses[1]}</p>
-                        <p>3. ${guesses[2]}</p>`;
+                        <p>1. ${guess}</p>`;
                     this.resultTarget.classList.remove('d-none', 'alert-success');
                     this.resultTarget.classList.add('alert-danger');
                 }
 
-                // Save the drawing to the server
-                this.saveDrawing(drawingId, drawingData, isRecognized);
 
-                // Move to the next drawing or end the game
-                this.currentDrawingIndex++;
 
-                if (this.currentDrawingIndex < this.words.length) {
-                    // Next drawing
-                    setTimeout(() => {
-                        this.clearCanvas();
-                        this.currentWordTarget.textContent = this.words[this.currentDrawingIndex];
-                        this.resultTarget.classList.add('d-none');
-                        this.resetTimer();
-                    }, 3000); // Increased timeout to give users more time to see the AI guesses
-                } else {
-                    // Game over
-                    setTimeout(() => {
-                        this.endGame();
-                    }, 3000); // Increased timeout to give users more time to see the AI guesses
-                }
-
-                // Update remaining count
-                this.remainingTarget.textContent = this.words.length - this.currentDrawingIndex;
             } else {
                 console.error('Error getting AI guesses:', data.error);
                 this.resultTarget.textContent = "Error processing your drawing. Please try again.";
