@@ -172,16 +172,21 @@ export default class extends Controller {
                 let currentScore = parseInt(this.scoreTarget.textContent);
                 if (isRecognized || forceNext) {
                     clearInterval(this.timer);
-                   if (isRecognized)
-                   {
-                       currentScore += 10;
+                    if (isRecognized) {
+                        // Calculate score based on remaining time
+                        const baseScore = 5;
+                        const timeBonus = this.timeLeft;
+                        const totalScore = baseScore + timeBonus;
 
-                    this.scoreTarget.textContent = currentScore;
-                    this.resultTarget.innerHTML = `<p>Correct! The AI recognized your drawing:</p>
-                        <p>1. <strong>${guess}</strong> (correct!)</p>`;
-                    this.resultTarget.classList.remove('d-none', 'alert-danger');
-                    this.resultTarget.classList.add('alert-success');
-                   }
+                        currentScore += totalScore;
+                        this.scoreTarget.textContent = currentScore;
+
+                        this.resultTarget.innerHTML = `<p>Correct! The AI recognized your drawing:</p>
+                            <p>1. <strong>${guess}</strong> (correct!)</p>
+                            <p><strong>+${totalScore}</strong> points (${baseScore} base + ${timeBonus} bonus)</p>`;
+                        this.resultTarget.classList.remove('d-none', 'alert-danger');
+                        this.resultTarget.classList.add('alert-success');
+                    }
                     this.saveDrawing(drawingId, drawingData, isRecognized);
                     this.currentDrawingIndex++;
 

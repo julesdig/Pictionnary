@@ -16,23 +16,29 @@ export default class extends Controller {
 
     renderDrawing(canvas, drawingData) {
         const ctx = canvas.getContext('2d');
-        ctx.lineWidth = 5;
-        ctx.lineCap = 'round';
-        ctx.strokeStyle = '#000000';
-
-        // Clear the canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Draw each stroke
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#000';
+
+        const originalWidth = 800;
+        const originalHeight = 600;
+
+        const scaleX = canvas.width / originalWidth;
+        const scaleY = canvas.height / originalHeight;
+
         drawingData.forEach(stroke => {
-            if (stroke.length > 0) {
+            const [xCoords, yCoords] = stroke;
+
+            if (xCoords.length > 0 && yCoords.length > 0) {
                 ctx.beginPath();
-                ctx.moveTo(stroke[0][0], stroke[0][1]);
-                
-                for (let i = 1; i < stroke.length; i++) {
-                    ctx.lineTo(stroke[i][0], stroke[i][1]);
+                ctx.moveTo(xCoords[0] * scaleX, yCoords[0] * scaleY);
+
+                for (let i = 1; i < xCoords.length; i++) {
+                    ctx.lineTo(xCoords[i] * scaleX, yCoords[i] * scaleY);
                 }
-                
+
                 ctx.stroke();
             }
         });
