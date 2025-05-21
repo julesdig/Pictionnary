@@ -28,7 +28,7 @@ class UserFormBuilder
             [
                 'method' => Request::METHOD_POST,
                 'fields'=> [],
-                'ignore_fields' => ['roles'],
+                'ignore_fields' => ['roles','games'],
             ]
         );
     }

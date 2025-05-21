@@ -1,0 +1,8 @@
+framework:
+  http_client:
+    scoped_clients:
+      ia.client:
+        base_uri: '%env(IA_API_URL)%'
+        headers:
+          Content-Type: 'application/json'
+          Accept: 'application/json'

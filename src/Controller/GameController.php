@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[Route('', name: 'game.')]
 class GameController extends AbstractController
@@ -62,27 +63,36 @@ class GameController extends AbstractController
     public function guessDrawing(
         Request $request,
         Drawing $drawing,
-        DrawingManager $drawingManager
+        DrawingManager $drawingManager,
+        HttpClientInterface $iaClient
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
-
+dump($data);
         if (!isset($data['drawing'])) {
             return $this->json(['error' => 'Drawing and expectedWord are required'], 400);
         }
 
         $expectedWord = $drawing->getWord();
 
-        // Simulate AI guesses
-        $words = $drawingManager->findDistinctWords();
-        $words = array_column($words, 'word');
-        $randomWord = $words[array_rand($words)];
+       $response = $iaClient->request(Request::METHOD_POST,
+            '/predict',
+            ['body'=> json_encode( $data["drawing"])]
+        );
+       if($response->getStatusCode() == Response::HTTP_OK) {
 
-
-        $isRecognized = $randomWord === $expectedWord;
+       }
+      $content =null;
+       if(
+           $response->getStatusCode() == Response::HTTP_OK ){
+           $content = $response->getContent();
+       }
+       $content = json_decode($content, true);
+       $word= $content['prediction'] ?? null;
+        $isRecognized = $word === $expectedWord;
 
         return $this->json([
             'success' => true,
-            'guess' => $randomWord,
+            'guess' => $word,
             'isRecognized' => $isRecognized
         ]);
     }
