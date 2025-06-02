@@ -59,13 +59,15 @@ class AbstractDynamicFormType extends AbstractType
                     'required' => true,
                     'first_options'  => [
                         'label' => $this->generateLabel('password'),
-                        'attr' => ['placeholder' => $this->generatePlaceholder('password'), 'class' => 'form-control']
+                        'label_attr' => ['class' => 'sub_title' ],
+                        'attr' => ['placeholder' => $this->generatePlaceholder('password'), 'class' => 'form_style']
                     ],
                     'second_options' => [
-                        'label' => $this->generateLabel('repeatPassword'),
+                        'label' => $this->generateLabel('labelrepeatPassword'),
+                        'label_attr' => ['class' => 'sub_title' ],
                         'attr' => [
                             'placeholder' => $this->generatePlaceholder('repeatPassword'),
-                            'class' => 'form-control',
+                            'class' => 'form_style',
                         ],
                     ],
                 ]),
@@ -74,16 +76,17 @@ class AbstractDynamicFormType extends AbstractType
                     $this->fieldTypeGuesser->guessFormType(static::getEntityClass(), $field),
                     [
                         'label' => $this->generateLabel($field),
+                        'label_attr' => ['class' => 'sub_title' ],
                     'attr' => [
                         'placeholder' => $this->generatePlaceholder($field),
-                        'class' => 'form-control',
+                        'class' => 'form_style',
                         ],
                     ]
                 ),
             };
             $builder->add('save', SubmitType::class, [
                 'label' => $this->translator->trans('button.submit'),
-                'attr' => ['class' => 'btn btn-primary mt-3'],
+                'attr' => ['class' => 'btn'],
             ]);
         }
     }

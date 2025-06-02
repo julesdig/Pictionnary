@@ -37,5 +37,6 @@ User:
   firstName: "Prénom"
   lastName: "Nom"
   email: "Email"
-  password: "Mot de passe"
-  repeatPassword: "Répéter le mot de passe"
+  password: "Mot de Passe"
+  labelrepeatPassword: "Répéter Mot de Passe"
+  repeatPassword: "à nouveau Mot de Passe"

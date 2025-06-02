@@ -3,7 +3,7 @@
 {% block title %}{{ "security.title"|trans() }}{% endblock %}
 
 {% block body %}
-    <div class=" d-flex justify-content-center align-items-center vh-100">
+    <!-- <div class=" d-flex justify-content-center align-items-center vh-100">
         <div class="container mt-5">
             <div class="row justify-content-center">
                 <div class="col-md-6">
@@ -35,7 +35,7 @@
                                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                                 <div class="d-grid gap-2">
                                     <button class="btn btn-primary"
-                                            type="submit"> {{ 'security.login.submit'|trans }}</button>
+                                            type="submit">CONNEXION</button>
                                 </div>
                             </form>
                             <div class="text-center mt-3">
@@ -45,6 +45,32 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    -->
+        <div class="container">
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <div class="form_area">
+            <p class="title">CONNEXION</p>
+            <form method="post">
+                <div class="form_group">
+                    <label class="sub_title" for="email">Email</label>
+                    <input placeholder="Entrez votre adresse mail" name="email" id="email" class="form_style" type="email" required autofocus>
+                </div>
+                <div class="form_group">
+                    <label class="sub_title" for="password">Password</label>
+                    <input placeholder="Entrez votre mot de passe" name="password" id="password" class="form_style" type="password" required>
+                </div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"><x></x>
+                <div>
+                    <button type="submit" class="btn">CONNEXION</button>
+                    <p>Pas de compte ? <a class="link" href={{ path('app_register') }}>Inscris-toi !</a></p>
+                </div>
+            </form>
         </div>
     </div>
 {% endblock %}

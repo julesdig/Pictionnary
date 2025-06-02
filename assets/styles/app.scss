@@ -9,11 +9,12 @@
 /*** Icons ***/
 @import '../../node_modules/bootstrap-icons/font/bootstrap-icons';
 
+@import 'variables';
+@import 'mixins';
+
 /*** Bootstrap ***/
 @import '../../node_modules/bootstrap/scss/bootstrap';
 
 @import 'admin';
 @import 'game';
 @import 'loginregister';
-@import 'mixins';
-@import 'variables';
