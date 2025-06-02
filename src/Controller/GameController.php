@@ -67,7 +67,6 @@ class GameController extends AbstractController
         HttpClientInterface $iaClient
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
-dump($data);
         if (!isset($data['drawing'])) {
             return $this->json(['error' => 'Drawing and expectedWord are required'], 400);
         }
@@ -76,11 +75,8 @@ dump($data);
 
        $response = $iaClient->request(Request::METHOD_POST,
             '/predict',
-            ['body'=> json_encode( $data["drawing"])]
+            [ 'body' => json_encode(['strokes' => $data['drawing']])]
         );
-       if($response->getStatusCode() == Response::HTTP_OK) {
-
-       }
       $content =null;
        if(
            $response->getStatusCode() == Response::HTTP_OK ){

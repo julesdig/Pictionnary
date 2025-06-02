@@ -43,20 +43,19 @@ class Drawing
     #[Assert\Count(min: 1)]
     private array $drawing = [];
 
-    /**
-     * @var Collection<int, Game>
-     */
-    #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'Drawing')]
-    private Collection $games;
+    #[ORM\ManyToOne(targetEntity: Game::class, inversedBy: 'drawings')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Game $game = null;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $isStarted = false;
 
-
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'drawings')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $category = null;
 
     public function __construct()
     {
-        $this->games = new ArrayCollection();
         $this->timestamp = new DateTime();
     }
 
@@ -120,33 +119,6 @@ class Drawing
         return $this;
     }
 
-    /**
-     * @return Collection<int, Game>
-     */
-    public function getGames(): Collection
-    {
-        return $this->games;
-    }
-
-    public function addGame(Game $game): static
-    {
-        if (!$this->games->contains($game)) {
-            $this->games->add($game);
-            $game->addDrawing($this);
-        }
-
-        return $this;
-    }
-
-    public function removeGame(Game $game): static
-    {
-        if ($this->games->removeElement($game)) {
-            $game->removeDrawing($this);
-        }
-
-        return $this;
-    }
-
     public function isStarted(): bool
     {
         return $this->isStarted;
@@ -155,6 +127,26 @@ class Drawing
     public function setIsStarted(bool $isStarted): void
     {
         $this->isStarted = $isStarted;
+    }
+
+    public function getGame(): ?Game
+    {
+        return $this->game;
+    }
+
+    public function setGame(?Game $game): void
+    {
+        $this->game = $game;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): void
+    {
+        $this->category = $category;
     }
 
 }

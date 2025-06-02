@@ -22,20 +22,20 @@ class Game
 
     #[ORM\ManyToOne(inversedBy: 'games')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $User = null;
+    private ?User $user = null;
 
     /**
      * @var Collection<int, Drawing>
      */
-    #[ORM\ManyToMany(targetEntity: Drawing::class, inversedBy: 'games')]
-    private Collection $Drawing;
+    #[ORM\OneToMany(mappedBy: 'game', targetEntity: Drawing::class, cascade: ['persist', 'remove'])]
+    private Collection $drawings;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?DateTimeInterface $date = null;
 
     public function __construct()
     {
-        $this->Drawing = new ArrayCollection();
+        $this->drawings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -57,12 +57,12 @@ class Game
 
     public function getUser(): ?User
     {
-        return $this->User;
+        return $this->user;
     }
 
-    public function setUser(?User $User): static
+    public function setUser(?User $user): static
     {
-        $this->User = $User;
+        $this->user = $user;
 
         return $this;
     }
@@ -72,13 +72,13 @@ class Game
      */
     public function getDrawing(): Collection
     {
-        return $this->Drawing;
+        return $this->drawings;
     }
 
     public function addDrawing(Drawing $drawing): static
     {
-        if (!$this->Drawing->contains($drawing)) {
-            $this->Drawing->add($drawing);
+        if (!$this->drawings->contains($drawing)) {
+            $this->drawings->add($drawing);
         }
 
         return $this;
@@ -86,7 +86,7 @@ class Game
 
     public function removeDrawing(Drawing $drawing): static
     {
-        $this->Drawing->removeElement($drawing);
+        $this->drawings->removeElement($drawing);
 
         return $this;
     }
