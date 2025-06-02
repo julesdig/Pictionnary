@@ -5,9 +5,9 @@ import './bootstrap.js';
  * This file will be included onto the page via the importmap() Twig function,
  * which should already be in your base.html.twig.
  */
-import './styles/app.scss';
+import '../styles/app.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Toast, Tooltip} from "bootstrap";
+import { Toast, Tooltip } from "bootstrap";
 
 let tooltip = function (mutationsList, observer) {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
