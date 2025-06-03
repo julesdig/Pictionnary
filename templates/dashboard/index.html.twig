@@ -9,7 +9,10 @@
         <h1 class="display-4 text-primary mb-4">Bienvenue sur le jeu !</h1>
         <p class="lead text-secondary mb-5">Prêt à commencer une nouvelle aventure ?</p>
         <div class="d-flex gap-3">
-            <a href="{{ path('game.start') }}" class="btn btn-lg btn-success px-5 py-3">Démarrer une partie</a>
+            {{ form_start(form) }}
+            {{ form_row(form.category) }}
+            {{ form_row(form.save) }}
+            {{ form_end(form) }}
         </div>
     </div>
 

@@ -54,7 +54,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Game>
      */
-    #[ORM\OneToMany(targetEntity: Game::class, mappedBy: 'User')]
+    #[ORM\OneToMany(targetEntity: Game::class, mappedBy: 'user')]
     private Collection $games;
 
     public function __construct()
