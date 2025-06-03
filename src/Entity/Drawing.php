@@ -43,20 +43,15 @@ class Drawing
     #[Assert\Count(min: 1)]
     private array $drawing = [];
 
-    /**
-     * @var Collection<int, Game>
-     */
-    #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'Drawing')]
-    private Collection $games;
+    #[ORM\ManyToOne(targetEntity: Game::class, inversedBy: 'drawings')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Game $game = null;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $isStarted = false;
 
-
-
     public function __construct()
     {
-        $this->games = new ArrayCollection();
         $this->timestamp = new DateTime();
     }
 
@@ -120,33 +115,6 @@ class Drawing
         return $this;
     }
 
-    /**
-     * @return Collection<int, Game>
-     */
-    public function getGames(): Collection
-    {
-        return $this->games;
-    }
-
-    public function addGame(Game $game): static
-    {
-        if (!$this->games->contains($game)) {
-            $this->games->add($game);
-            $game->addDrawing($this);
-        }
-
-        return $this;
-    }
-
-    public function removeGame(Game $game): static
-    {
-        if ($this->games->removeElement($game)) {
-            $game->removeDrawing($this);
-        }
-
-        return $this;
-    }
-
     public function isStarted(): bool
     {
         return $this->isStarted;
@@ -157,4 +125,13 @@ class Drawing
         $this->isStarted = $isStarted;
     }
 
+    public function getGame(): ?Game
+    {
+        return $this->game;
+    }
+
+    public function setGame(?Game $game): void
+    {
+        $this->game = $game;
+    }
 }

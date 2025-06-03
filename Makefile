@@ -1,3 +1,4 @@
+
 XDEBUG_INI_PATH=/usr/local/etc/php/conf.d/xdebug.ini
 PHP_CONTAINER_NAME=pictionary_php
 S3_BUCKET_URL=http://localhost:4566/local-bucket

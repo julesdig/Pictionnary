@@ -22,20 +22,23 @@ class Game
 
     #[ORM\ManyToOne(inversedBy: 'games')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $User = null;
+    private ?User $user = null;
 
     /**
      * @var Collection<int, Drawing>
      */
-    #[ORM\ManyToMany(targetEntity: Drawing::class, inversedBy: 'games')]
-    private Collection $Drawing;
+    #[ORM\OneToMany(targetEntity: Drawing::class, mappedBy: 'game', cascade: ['persist', 'remove'])]
+    private Collection $drawings;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?DateTimeInterface $date = null;
 
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'games')]
+    private ?Category $category = null;
+
     public function __construct()
     {
-        $this->Drawing = new ArrayCollection();
+        $this->drawings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -57,39 +60,51 @@ class Game
 
     public function getUser(): ?User
     {
-        return $this->User;
+        return $this->user;
     }
 
-    public function setUser(?User $User): static
+    public function setUser(?User $user): static
     {
-        $this->User = $User;
+        $this->user = $user;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Drawing>
-     */
-    public function getDrawing(): Collection
+    public function getDrawings(): Collection
     {
-        return $this->Drawing;
+        return $this->drawings;
     }
 
-    public function addDrawing(Drawing $drawing): static
+    public function addDrawing(Drawing $drawing): self
     {
-        if (!$this->Drawing->contains($drawing)) {
-            $this->Drawing->add($drawing);
+        if (!$this->drawings->contains($drawing)) {
+            dump("je suis ici");
+            $this->drawings->add($drawing);
         }
-
         return $this;
     }
 
-    public function removeDrawing(Drawing $drawing): static
+    public function removeDrawing(Drawing $drawing): self
     {
-        $this->Drawing->removeElement($drawing);
-
+        if (!$this->drawings->contains($drawing)) {
+            $this->drawings->removeElement($drawing);
+        }
         return $this;
+
     }
+
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): void
+    {
+        $this->category = $category;
+    }
+
+
 
     public function getDate(): ?\DateTimeInterface
     {
