@@ -1,6 +1,6 @@
 
 XDEBUG_INI_PATH=/usr/local/etc/php/conf.d/xdebug.ini
-PHP_CONTAINER_NAME=pictionnary_php
+PHP_CONTAINER_NAME=pictionary_php
 S3_BUCKET_URL=http://localhost:4566/local-bucket
 .DEFAULT_GOAL := help
 .PHONY : help
@@ -37,6 +37,7 @@ init-project: ## Initialize project (Docker + DB setup + Composer install)
 	$(MAKE) composer-install
 	$(MAKE) create-db
 	$(MAKE) update-db
+	$(MAKE) install-fixture
 	@echo "✅ Project initialized successfully!"
 
 phpcs: ## play phpcs
@@ -70,3 +71,7 @@ enable-worker: ## Enable worker
 	@docker compose exec -d $(PHP_CONTAINER_NAME) php bin/console messenger:consume async --limit=100 -vv
 	@docker compose exec -d $(PHP_CONTAINER_NAME) php bin/console messenger:consume async --limit=100 -vv
 	@docker compose exec -d $(PHP_CONTAINER_NAME) php bin/console messenger:consume async --limit=100 -vv
+
+install-fixture: ## Install fixtures
+	docker exec -it pictionary_php php bin/console doctrine:fixtures:load --no-interaction
+	@echo "✅ Fixtures installed successfully!"
