@@ -36,6 +36,7 @@ init-project: ## Initialize project (Docker + DB setup + Composer install)
 	$(MAKE) composer-install
 	$(MAKE) create-db
 	$(MAKE) update-db
+	$(MAKE) install-fixture
 	@echo "✅ Project initialized successfully!"
 
 phpcs: ## play phpcs
@@ -64,3 +65,12 @@ enable-xdebug: ## Enable xdebug
 disable-xdebug: ## Disable xdebug
 	docker exec -it $(PHP_CONTAINER_NAME) sh -c "sed -i 's/^xdebug.mode=.*/xdebug.mode=off/' $(XDEBUG_INI_PATH)"
 	docker restart $(PHP_CONTAINER_NAME)
+
+enable-worker: ## Enable worker
+	@docker compose exec -d $(PHP_CONTAINER_NAME) php bin/console messenger:consume async --limit=100 -vv
+	@docker compose exec -d $(PHP_CONTAINER_NAME) php bin/console messenger:consume async --limit=100 -vv
+	@docker compose exec -d $(PHP_CONTAINER_NAME) php bin/console messenger:consume async --limit=100 -vv
+
+install-fixture: ## Install fixtures
+	docker exec -it pictionary_php php bin/console doctrine:fixtures:load --no-interaction
+	@echo "✅ Fixtures installed successfully!"
