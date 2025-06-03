@@ -46,28 +46,4 @@ return [
     'chart.js' => [
         'version' => '3.9.1',
     ],
-    '@wandb/sdk' => [
-        'version' => '0.5.1',
-    ],
-    'graphql-request' => [
-        'version' => '5.2.0',
-    ],
-    'cross-fetch' => [
-        'version' => '3.1.6',
-    ],
-    '@wandb/sdk/dist/sdk/lib/netrc.js' => [
-        'version' => '0.5.1',
-    ],
-    'readline' => [
-        'version' => '1.3.0',
-    ],
-    'extract-files' => [
-        'version' => '9.0.0',
-    ],
-    'form-data' => [
-        'version' => '3.0.1',
-    ],
-    'graphql' => [
-        'version' => '16.6.0',
-    ],
 ];

@@ -20,7 +20,7 @@ final class Version20250602201619 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-       /* $this->addSql(<<<'SQL'
+       $this->addSql(<<<'SQL'
             CREATE TABLE category (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(100) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4
         SQL);
         $this->addSql(<<<'SQL'
@@ -43,7 +43,7 @@ final class Version20250602201619 extends AbstractMigration
           SQL);
         $this->addSql(<<<'SQL'
             ALTER TABLE drawing ADD game_id INT default NULL, ADD category_id INT
-        SQL);*/
+        SQL);
         $this->addSql(<<<'SQL'
             UPDATE drawing SET category_id = (SELECT id FROM category WHERE name = 'Formes et symboles')
             WHERE word IN ('zigzag', 'octagon', 'diamond')
