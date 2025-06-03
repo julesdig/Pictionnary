@@ -31,3 +31,7 @@ This command install all container , composer and dependencies , and create the 
 3.after clone the repository pictionnary_ia and run the command
 
 ```docker compose up -d --build```
+
+4. The website is available at http://localhost
+5. the admin token is : admin@gmail.com and admin
+6. The user token is : user@gmail.com and user 
