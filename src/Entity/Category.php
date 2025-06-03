@@ -17,12 +17,12 @@ class Category
     #[ORM\Column(type: 'string', length: 100)]
     private string $name;
 
-    #[ORM\OneToMany(targetEntity: Drawing::class, mappedBy: 'category')]
-    private Collection $drawings;
+    #[ORM\OneToMany(targetEntity: Game::class, mappedBy: 'category')]
+    private Collection $games;
 
     public function __construct()
     {
-        $this->drawings = new ArrayCollection();
+        $this->games = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -41,8 +41,8 @@ class Category
         return $this;
     }
 
-    public function getDrawings(): Collection
+    public function getGames(): Collection
     {
-        return $this->drawings;
+        return $this->games;
     }
 }

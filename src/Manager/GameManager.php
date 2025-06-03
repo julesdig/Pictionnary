@@ -28,8 +28,8 @@ class GameManager
         foreach ($words as $word) {
             $drawing = new Drawing();
             $drawing->setWord($word);
+            $drawing->setGame($game);
             $this->manager->persist($drawing);
-            $game->addDrawing($drawing);
         }
 
         $this->manager->persist($game);

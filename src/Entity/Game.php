@@ -27,11 +27,14 @@ class Game
     /**
      * @var Collection<int, Drawing>
      */
-    #[ORM\OneToMany(mappedBy: 'game', targetEntity: Drawing::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Drawing::class, mappedBy: 'game', cascade: ['persist', 'remove'])]
     private Collection $drawings;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?DateTimeInterface $date = null;
+
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'games')]
+    private ?Category $category = null;
 
     public function __construct()
     {
@@ -67,29 +70,41 @@ class Game
         return $this;
     }
 
-    /**
-     * @return Collection<int, Drawing>
-     */
-    public function getDrawing(): Collection
+    public function getDrawings(): Collection
     {
         return $this->drawings;
     }
 
-    public function addDrawing(Drawing $drawing): static
+    public function addDrawing(Drawing $drawing): self
     {
         if (!$this->drawings->contains($drawing)) {
+            dump("je suis ici");
             $this->drawings->add($drawing);
         }
-
         return $this;
     }
 
-    public function removeDrawing(Drawing $drawing): static
+    public function removeDrawing(Drawing $drawing): self
     {
-        $this->drawings->removeElement($drawing);
-
+        if (!$this->drawings->contains($drawing)) {
+            $this->drawings->removeElement($drawing);
+        }
         return $this;
+
     }
+
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): void
+    {
+        $this->category = $category;
+    }
+
+
 
     public function getDate(): ?\DateTimeInterface
     {

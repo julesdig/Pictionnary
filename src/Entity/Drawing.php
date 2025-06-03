@@ -50,10 +50,6 @@ class Drawing
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $isStarted = false;
 
-    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'drawings')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Category $category = null;
-
     public function __construct()
     {
         $this->timestamp = new DateTime();
@@ -138,15 +134,4 @@ class Drawing
     {
         $this->game = $game;
     }
-
-    public function getCategory(): ?Category
-    {
-        return $this->category;
-    }
-
-    public function setCategory(?Category $category): void
-    {
-        $this->category = $category;
-    }
-
 }

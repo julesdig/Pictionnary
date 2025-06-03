@@ -38,7 +38,7 @@ class DrawingManager
             ->addSelect('SUM(CASE WHEN d.recognized = 0 THEN 1 ELSE 0 END) AS non_reconnus')
             ->addSelect('COUNT(d.id) AS total')
             ->from(Drawing::class, 'd')
-            ->join('d.games', 'g')
+            ->join('d.game', 'g')
             ->where('g.user = :user')
             ->setParameter('user', $user)
             ->groupBy('d.word')

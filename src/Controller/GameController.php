@@ -18,20 +18,9 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 #[Route('', name: 'game.')]
 class GameController extends AbstractController
 {
-    #[Route('start', name: 'start')]
-    public function create(DrawingManager $drawingManager, GameManager $gameManager): Response
+    #[Route('start/{id}', name: 'start')]
+    public function create(Game $game): Response
     {
-        $user = $this->getUser();
-        if (!$user instanceof User) {
-           throw $this->createAccessDeniedException();
-        }
-
-        $words = $drawingManager->findDistinctWords();
-        $words = array_column($words, 'word');
-        shuffle($words);
-        $randomWords = array_slice($words, 0, 5);
-
-        $game = $gameManager->createGame($user, $randomWords);
 
         return $this->render('game/index.html.twig', [
                 'game' => $game,
@@ -75,7 +64,7 @@ class GameController extends AbstractController
 
        $response = $iaClient->request(Request::METHOD_POST,
             '/predict',
-            [ 'body' => json_encode(['strokes' => $data['drawing']])]
+            [ 'body' => json_encode( $data['drawing'])]
         );
       $content =null;
        if(

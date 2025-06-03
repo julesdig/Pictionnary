@@ -16,7 +16,7 @@
                     <h3>Final Score: {{ game.score }}</h3>
 
                     <div class="row mt-4">
-                        {% for drawing in game.drawing %}
+                        {% for drawing in game.drawings %}
                             <div class="col-md-4 mb-3">
                                 <div class="card">
                                     <div class="card-header {% if drawing.recognized %}bg-success text-white{% else %}bg-danger text-white{% endif %}">
@@ -36,7 +36,6 @@
                     </div>
 
                     <div class="mt-4">
-                        <a href="{{ path('game.start') }}" class="btn btn-primary">Play Again</a>
                         <a href="{{ path('dashboard.index') }}" class="btn btn-secondary">Back to Dashboard</a>
                     </div>
                 </div>

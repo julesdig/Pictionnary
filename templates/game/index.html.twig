@@ -10,7 +10,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h2>Pictionary - <span data-game-target="currentWord">{{ game.drawing[0].word }}</span></h2>
+                    <h2>Pictionary - <span data-game-target="currentWord">{{ game.drawings[0].word }}</span></h2>
                     <div class="timer">
                         <span class="badge bg-primary fs-4" data-game-target="timer">20</span>
                     </div>
@@ -34,7 +34,7 @@
                                 </div>
                                 <div class="card-body">
                                     <p><strong>Score:</strong> <span data-game-target="score">{{ game.score }}</span></p>
-                                    <p><strong>Drawings Remaining:</strong> <span data-game-target="remaining">{{ game.drawing|length }}</span></p>
+                                    <p><strong>Drawings Remaining:</strong> <span data-game-target="remaining">{{ game.drawings|length }}</span></p>
                                     <div data-game-target="result" class="alert d-none"></div>
                                 </div>
                             </div>
@@ -49,7 +49,7 @@
     <!-- Hidden data for JavaScript -->
     <div class="d-none">
         <input type="hidden" data-game-target="gameId" value="{{ game.id }}">
-        {% for drawing in game.drawing %}
+        {% for drawing in game.drawings %}
             <input type="hidden" data-game-target="drawingWords" value="{{ drawing.word }}">
             <input type="hidden" data-game-target="drawingIds" value="{{ drawing.id }}">
         {% endfor %}
