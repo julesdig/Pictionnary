@@ -1,0 +1,10 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block main %}
+    <h1>Importer des dessins</h1>
+
+    {{ form_start(form) }}
+    {{ form_row(form.file) }}
+    {{ form_row(form.submit) }}
+    {{ form_end(form) }}
+{% endblock %}

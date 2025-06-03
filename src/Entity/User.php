@@ -2,8 +2,12 @@
 
 namespace App\Entity;
 
+use App\Model\Enum\SecurityRoleEnum;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Array_;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -13,13 +17,12 @@ use Symfony\Component\Validator\Constraints\PasswordStrength;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity('email')]
-#[UniqueEntity('device')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
     #[Assert\Email(message: "user.email.type")]
     #[Assert\NotBlank(message: "user.email.not_blank")]
     #[ORM\Column(length: 180)]
@@ -28,7 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank(message: "user.firstname.not_blank")]
     #[Assert\Length(min: 3, max: 50, minMessage: 'user.firstname.min')]
     #[ORM\Column(type: 'text', length: 50, nullable: false)]
-    private string $firstName;
+    private string $firstName ;
     #[Assert\NotBlank(message: "user.lastname.not_blank")]
     #[Assert\Length(min: 3, max: 50, minMessage: 'user.lastname.min')]
     #[ORM\Column(type: 'text', length: 50, nullable: false)]
@@ -38,16 +41,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private array $roles = [];
-
-    /**
-     * @var string The hashed password
-     */
     #[Assert\Length(min: 12, max: 255, minMessage: 'user.password.min')]
-    #[Assert\PasswordStrength( minScore: PasswordStrength::STRENGTH_VERY_STRONG)]
+    #[Assert\PasswordStrength(minScore: PasswordStrength::STRENGTH_VERY_STRONG)]
     #[Assert\NotCompromisedPassword]
-    #[Assert\Regex(pattern: '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.* )(?=.*[^a-zA-Z0-9]).{12,}$/', message: 'user.password.regex')]
+    #[Assert\Regex(
+        pattern: '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.* )(?=.*[^a-zA-Z0-9]).{12,}$/',
+        message: 'user.password.regex'
+    )]
     #[ORM\Column(type: 'string', length: 255, nullable: false)]
     private string $password;
+
+    /**
+     * @var Collection<int, Game>
+     */
+    #[ORM\OneToMany(targetEntity: Game::class, mappedBy: 'user')]
+    private Collection $games;
+
+    public function __construct()
+    {
+        $this->games = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -102,10 +115,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);
+        if(empty($roles)) {
+            return [SecurityRoleEnum::User->value];
+        }
+
+
+        return $roles;
     }
 
     /**
@@ -148,4 +164,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->getUserIdentifier();
     }
 
+    /**
+     * @return Collection<int, Game>
+     */
+    public function getGames(): Collection
+    {
+        return $this->games;
+    }
+
+    public function addGame(Game $game): static
+    {
+        if (!$this->games->contains($game)) {
+            $this->games->add($game);
+            $game->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGame(Game $game): static
+    {
+        if ($this->games->removeElement($game)) {
+            // set the owning side to null (unless already changed)
+            if ($game->getUser() === $this) {
+                $game->setUser(null);
+            }
+        }
+
+        return $this;
+    }
 }

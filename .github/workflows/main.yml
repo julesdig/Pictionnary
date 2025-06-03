@@ -11,15 +11,15 @@ on:
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   security:
     uses: ./.github/workflows/security.yml
     secrets: inherit
-
-  coding-standard:
-    uses: ./.github/workflows/coding-standards.yml
-    secrets: inherit
-    needs: security
 
   test:
     uses: ./.github/workflows/test.yml

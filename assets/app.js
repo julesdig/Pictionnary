@@ -5,9 +5,10 @@ import './bootstrap.js';
  * This file will be included onto the page via the importmap() Twig function,
  * which should already be in your base.html.twig.
  */
-import './styles/app.css';
+import './styles/app.scss';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Toast, Tooltip} from "bootstrap";
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
 let tooltip = function (mutationsList, observer) {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl));

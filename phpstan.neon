@@ -1,0 +1,16 @@
+parameters:
+    level: 5
+    excludePaths:
+        - phpmd.xml
+        - phpcs.xml
+        - phpunit.xml
+        - bin/*
+        - misc/*
+        - **/*.png
+        - **/*.jpg
+    treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+                -
+                  message: '#is never written, only read.#'
+                  path: src/Entity/*

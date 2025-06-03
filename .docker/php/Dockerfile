@@ -6,7 +6,6 @@ LABEL maintainer="Osiozekhai Aliu"
 
 ARG WORKDIR_SERVER
 ARG PHP_VERSION_SET
-ARG XDEBUG_ENABLE
 ARG TZ
 ARG USER=appuser
 
@@ -14,6 +13,7 @@ COPY conf/zz-docker.conf /usr/local/etc/php-fpm.d/
 COPY conf/xdebug.ini /usr/local/etc/php/conf.d/
 
 RUN apk update && apk upgrade --available \
+    && apk add --no-cache linux-headers \
     && apk add --virtual build-dependencies \
         libc-dev \
         libxslt-dev \
@@ -58,6 +58,9 @@ RUN docker-php-ext-configure gd --with-freetype=/usr/include/freetype2 --with-jp
         soap \
     && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo $TZ > /etc/timezone
+
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
 
 RUN apk del .build-deps
 
