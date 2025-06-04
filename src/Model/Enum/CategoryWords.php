@@ -7,10 +7,10 @@ use App\Entity\Category;
 enum CategoryWords
 {
     public const array WORDS = [
-        'Formes et symboles' => ['zigzag', 'octagon', 'diamond'],
-        'Objets du quotidien' => ['crayon', 'envelope'],
-        'Corps humain et vêtements' => ['eye', 'pants'],
-        'Nature & transport' => ['mushroom', 'wheel', 'airplane'],
+        'Formes et symboles' => ['zigzag', 'octagon', 'diamond','triangle', 'square'],
+        'Objets du quotidien' => ['crayon', 'envelope', 'scissor', 'spoon', 'hammer'],
+        'Corps humain et vêtements' => ['eye', 'pants', 'hat',  'shoe', 't-shirt'],
+        'Nature & transport' => ['mushroom', 'wheel', 'airplane', 'train', 'flower' ],
     ];
 
     public static function getWordsForCategoryName(Category $category): array
